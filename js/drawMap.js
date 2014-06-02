@@ -1,4 +1,4 @@
-function drawMap(figure) {
+function drawMap(figure,data) {
     /* 
        plot the state map!
 
@@ -39,7 +39,7 @@ function drawMap(figure) {
     color = d3.scale.quantize()
 	//.range(["rgb(237,248,233)","rgb(186,228,179)","rgb(116,196,118)","rgb(49,163,84)","rgb(0,109,44)"]);
         .range(colorStrings)
-	.domain([d3.min(stateFlux),d3.max(stateFlux)]);
+	.domain([d3.min(data),d3.max(data)]);
     //Colors taken from colorbrewer.js, included in the D3 download
 
     // remove an old figure if it exists
@@ -73,7 +73,7 @@ function drawMap(figure) {
     states
          .attr("fill", function(d,i) {
 	    // need to get the variable map right
-    	    var value = stateFlux[i];
+    	    var value = data[i];
     	    return color(value);
     	 })
 	.attr("stroke","black")
@@ -150,7 +150,7 @@ function drawMap(figure) {
 	//     .attr("fill",color(allData[i].avhapps));
 	d3.select(this)
          .attr("fill", function() {
-    	     return color(stateFlux[i]);
+    	     return color(data[i]);
     	});
     }
 

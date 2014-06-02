@@ -23,17 +23,67 @@
     <script src="js/topojson.v1.min.js" charset="utf-8"></script>
     <script src="js/plotShiftCalories.js" charset="utf-8"></script>
     <script src="js/plotShiftActivity.js" charset="utf-8"></script>
-    <script src="js/plotBarChart.js" charset="utf-8"></script>
+    <script src="js/plotBarChartSearch.js" charset="utf-8"></script>
     <script src="js/shift.js" charset="utf-8"></script>
     <script src="js/drawMap.js" charset="utf-8"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="js/typeahead.bundle.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+
+      var substringMatcher = function(strs) {
+        return function findMatches(q,cb) {
+          var matches, substringRegex;
+          console.log("matching "+q);
+          matches = [];
+          for (var i=0; i<foodNames.length; i++) {
+            if (foodNames[i].match(q)) {
+     	      matches.push({ value: foodNames[i]})   
+            }
+          }
+          cb(matches);
+        };
+      };
+
+      $(document).ready(function() {
+        console.log("initializing search");
+
+        $("#wordsearch").typeahead(
+          {
+            hint: false,
+            highlight: true,
+            minLength: 1,
+          },
+          {
+            name: "foodwords",
+            source: substringMatcher(["one","two"])
+          });
+        }).on("typeahead:selected",function(event,sugg,dataset) {
+              console.log(event);
+              console.log(sugg);
+              console.log(dataset);
+          for (var i=0; i<foodNames.length; i++) {
+            if (foodNames[i] === sugg.value) {
+					    console.log(i);
+           drawMap(d3.select("#map01"),stateFood[i].map(parseFloat).map(function(d,i) { return d/stateFoodTotals[i]; }));
+           plotBarChart(d3.select("#bars01"),stateFood[i].map(parseFloat).map(function(d,i) { return d/stateFoodTotals[i]; }),stateFeatures);
+              break;
+            }
+          }
+	      //drawWordStats(d3.select("#viewpanel"),sugg.value);
+              //$("#viewpanel").load('/definition/' + encodeURIComponent(sugg.value));
+              //$("#controlpanel").hide();
+            });
+    </script>
   </head>
   <body>
 
     <div class="container">
 
-    <h1>How do I look in these twets? Gauging well-being through "caloric content" of tweets</h1>
+      <h1>How do I look in these twets? Gauging well-being through "caloric content" of tweets</h1>
 
-          <h4>Sharon E. Alajajian, Jake R. Williams, Stephen C. Alajajian, Andrew J. Reagan, Morgan R. Frank, Lewis Mitchell, Jacob Lahne, Christopher M. Danforth, and Peter Sheridan Dodds</h4>
+      <h4>Sharon E. Alajajian, Jake R. Williams, Stephen C. Alajajian, Andrew J. Reagan, Morgan R. Frank, Lewis Mitchell, Jacob Lahne, Christopher M. Danforth, and Peter Sheridan Dodds</h4>
 
     <nav class="navbar navbar-default" role="navigation">
       <div class="container-fluid">
@@ -53,11 +103,11 @@
 	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	  <ul class="nav navbar-nav">
             <li><a href="index.html">Abstract</a></li>
-            <li class="active"><a href="maps.html">Maps</a></li>
+            <li><a href="maps.html">Maps</a></li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Phrases <b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a href="foodphrases.html">Food phrases</a></li>
+                <li class="active"><a href="foodphrases.html">Food phrases</a></li>
                 <li><a href="activityphrases.html">Activity phrases</a></li>
               </ul>
             </li>
@@ -69,55 +119,40 @@
 
       <div class="container-fluid">
 	<div class="row">
-	  <div class="col-xs-0 col-sm-4 hidden-xs">
-	  <!-- the hidden from this
-	       http://getbootstrap.com/css/#responsive-utilities-classes -->
-	    <h5>Bar chart</h5>
-
-	    <div id="bars01" class="figure"></div>
-
-	  </div> 
-	  <!-- <div class="clearfix visible-xs"></div> -->
-	  <div class="col-xs-12 col-sm-8">
-	    <h5>Map</h5>
-
-	    <div id="map01" class="figure"></div>
-
+	  <div class="col-xs-0 col-md-2">
 	  </div>
-	  <div class="col-xs-0 col-sm-0"></div>
-
+	  <div class="col-xs-12 col-md-8">
+	    <div class="demo">
+	      <input id="wordsearch" class="typeahead" type="text" style="margin-left: 5px;" placeholder="bacon">
+	    </div>
+	    <br>
+	    <br>
+	  </div>
+	  <div class="col-xs-0 col-md-2">
+	  </div>
 	</div>
 	<div class="row">
-	  <div class="col-xs-12 col-sm-6">
-	    <h5>Food shift</h5>
-	    <p>Click on the graph and drag up to reveal additional foods.</p>
-	    <div id="shift01" class="figure">
-	      <center>
-		<p class="sumtext"></p>
-		<p class="sumtext"></p>
-		<p class="sumtext"></p>
-	      </center>
-	    </div>
+	  <div class="col-xs-0 col-md-2">
 	  </div>
-	  <div class="col-xs-12 col-sm-6">
-	    <h5>Activity shift</h5>
-	    <p>Click on the graph and drag up to reveal additional activities.</p>
-	    <div id="shift02" class="figure">
-	      <center>
-		<p class="sumtext"></p>
-		<p class="sumtext"></p>
-		<p class="sumtext"></p>
-	      </center>
-	    </div>
+	  <div class="col-xs-12 col-md-8">
+	    <div id="map01" class="figure"></div>
+	    <br>
+	  </div> 
+	  <div class="col-xs-0 col-md-2">
+	  </div>
+	</div>
+	<div class="row">
+	  <div class="col-xs-0 col-md-2">
+	  </div>
+	  <div class="col-xs-12 col-md-8">
+	    <div id="bars01" class="figure"></div>
+	  </div> 
+	  <div class="col-xs-0 col-md-2">
 	  </div>
 	</div>
       </div><!-- /.container-fluid -->
     </div><!-- /.container -->
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
     <script>
       function initializePlot() {
           loadCsv();
@@ -161,10 +196,14 @@
 
       function initializePlotPlot() {
 	   // drap the map
-           drawMap(d3.select("#map01"),stateFlux);
-           allUSfood = stateFood.map(function(d) { return d3.sum(d); });
-           allUSact = stateAct.map(function(d) { return d3.sum(d); });
-           plotBarChart(d3.select("#bars01"),stateFlux,stateFeatures);
+           //drawMap(d3.select("#map01"),stateFlux);
+           //allUSfood = stateFood.map(function(d) { return d3.sum(d); });
+           //allUSact = stateAct.map(function(d) { return d3.sum(d); });
+           //plotBarChart(d3.select("#bars01"),stateFlux,stateFeatures);
+           stateFoodTotals = Array(stateFood[0].length);
+           for (var i=0; i<stateFoodTotals.length; i++) {
+               stateFoodTotals[i] = d3.sum(stateFood.map(function(d) { return d[i]; }));
+						   }
       };
 
       initializePlot();
