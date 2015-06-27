@@ -3,6 +3,9 @@ var allDecoder = d3.urllib.decoder().varresult("0").varname("all");
 var searchEncoder = d3.urllib.encoder().varname("search");
 var allEncoder = d3.urllib.encoder().varname("all");
 
+var qcolor = d3.scale.quantize()
+    .range([0,1,2,3,4,5,6,7,8]);
+
 var substringMatcher = function(strs) {
     return function findMatches(q,cb) {
         var matches, substringRegex;

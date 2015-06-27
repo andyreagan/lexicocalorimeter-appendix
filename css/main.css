@@ -106,3 +106,14 @@ table {
 #rtl-support .tt-dropdown-menu {
     text-align: right;
 }
+
+.q9-0 { fill: #f7fcf5;}
+.q9-1 { fill: #e5f5e0;}
+.q9-2 { fill: #c7e9c0;}
+.q9-3 { fill: #a1d99b;}
+.q9-4 { fill: #74c476;}
+.q9-5 { fill: #41ab5d;}
+.q9-6 { fill: #238b45;}
+.q9-7 { fill: #006d2c;}
+.q9-8 { fill: #00441b;}
+path.state:hover { fill: red; }

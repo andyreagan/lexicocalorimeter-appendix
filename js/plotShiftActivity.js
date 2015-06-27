@@ -14,7 +14,7 @@ function plotShiftActivity(figure,sortedMag,sortedType,sortedWords,sumTypes,refH
 	    }
     }
     var margin = {top: 0, right: 0, bottom: 0, left: 0},
-    figwidth = parseInt(figure.style('width')) - margin.left - margin.right,
+    figwidth = parseInt(d3.select('#shift02').style('width')) - margin.left - margin.right,
     figheight = 600 - margin.top - margin.bottom,
     width = .775*figwidth,
     height = .8875*figheight,
@@ -459,7 +459,7 @@ function plotShiftActivity(figure,sortedMag,sortedType,sortedWords,sumTypes,refH
     d3.select(window).on("resize.shiftplotact",resizeshift);
     
     function resizeshift() {
-	figwidth = parseInt(figure.style('width')) - margin.left - margin.right,
+	figwidth = parseInt(d3.select("#shift02").style('width')) - margin.left - margin.right,
 	width = .775*figwidth
 	figcenter = width/2;
 

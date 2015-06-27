@@ -10407,13 +10407,17 @@ function plotBarChart(figure,data,geodata) {
     figcenter = width/2,
     leftOffsetStatic = 0.125*figwidth;
 
+    data = data.map(function(d) { return d-d3.mean(data); });
+
+    console.log(geodata);
+
     // do the sorting
     indices = Array(data.length);
     for (var i = 0; i < data.length; i++) { indices[i] = i; }
     // sort by abs magnitude
     // indices.sort(function(a,b) { return Math.abs(data[a]) < Math.abs(data[b]) ? 1 : Math.abs(data[a]) > Math.abs(data[b]) ? -1 : 0; });
     // sort by magnitude, parity preserving
-    indices.sort(function(a,b) { return data[a] < data[b] ? -1 : data[a] > data[b] ? 1 : 0; });
+    indices.sort(function(a,b) { return data[a] < data[b] ? 1 : data[a] > data[b] ? -1 : 0; });
     var sortedStates = Array(data.length);
     for (var i = 0; i < data.length; i++) { sortedStates[i] = [i,indices[i],geodata[indices[i]].properties.name,data[indices[i]]]; }
     console.log(sortedStates);
@@ -10530,12 +10534,16 @@ function plotBarChart(figure,data,geodata) {
 	.attr("fill", "#000000")
 	.attr("style", "text-anchor: middle;");
 
+    qcolor = d3.scale.quantize()
+	.domain(d3.extent(data))
+	.range([0,1,2,3,4,5,6,7,8]);
+
     axes.selectAll("rect.staterect")
 	.data(sortedStates)
 	.enter()
 	.append("rect")
-	.attr("fill", function(d,i) { if (data[3]>0) {return color(data[3]);} else {return color(d[3]); } })
-	.attr("class", function(d,i) { return d[2]+" staterect"; })
+	// .attr("fill", function(d,i) { if (data[3]>0) {return color(data[3]);} else {return color(d[3]); } })
+	.attr("class", function(d,i) { return d[2]+" staterect "+"q9-"+qcolor(d[3]); })
 	.attr("x", function(d,i) { if (d[3]>0) { return figcenter; } else { return x(d[3]); } })
 	.attr("y", function(d,i) { return y(i+1); })
 	.style({'opacity':'0.7','stroke-width':'1','stroke':'rgb(0,0,0)'})
@@ -10707,6 +10715,8 @@ function drawMap(figure,data) {
 	.translate([w/2, h/2])
 	.scale(w*1.3);
 
+    qcolor.domain(d3.extent(data))
+
     //Define path generator
     var path = d3.geo.path()
 	.projection(projection);
@@ -10752,7 +10762,7 @@ function drawMap(figure,data) {
 	.append("path")
 	.attr("d", function(d,i) { return path(d.geometry); } )
 	.attr("id", function(d,i) { return d.properties.name; } )
-	.attr("class",function(d,i) { return "state map "+d.properties.name[0]+d.properties.name.split(" ")[d.properties.name.split(" ").length-1]; } )
+	.attr("class",function(d,i) { return "state map "+d.properties.name[0]+d.properties.name.split(" ")[d.properties.name.split(" ").length-1]+" q9-"+qcolor(data[i]-d3.mean(data)); } )
         //.on("mousedown",state_clicked)
         //.on("mouseover",function(d,i) { console.log(d.properties.name); } );
 	.on("mouseover",state_hover)
@@ -10761,11 +10771,6 @@ function drawMap(figure,data) {
     states.exit().remove();
 
     states
-         .attr("fill", function(d,i) {
-	    // need to get the variable map right
-    	    var value = data[i];
-    	    return color(value);
-    	 })
 	.attr("stroke","black")
 	.attr("stroke-width","1");
 
@@ -10803,7 +10808,7 @@ function drawMap(figure,data) {
     function state_hover(d,i) { 
 	// next line verifies that the data and json line up
 	// console.log(d.properties.name); console.log(allData[i].name.split(" ")[allData[i].name.split(" ").length-1]); 
-	d3.select(this).attr("fill","red");
+	// d3.select(this).attr("fill","red");
 	shiftComp = i;
 	shiftCompName = d.properties.name;
 	// if (shiftRef !== shiftComp) {
@@ -10838,10 +10843,10 @@ function drawMap(figure,data) {
 	// console.log(".state.list."+allData[i].name[0]+allData[i].name.split(" ")[allData[i].name.split(" ").length-1]);
 	// d3.selectAll(".state.list."+allData[i].name[0]+allData[i].name.split(" ")[allData[i].name.split(" ").length-1])
 	//     .attr("fill",color(allData[i].avhapps));
-	d3.select(this)
-         .attr("fill", function() {
-    	     return color(data[i]);
-    	});
+	// d3.select(this)
+        //  .attr("fill", function() {
+    	//      return color(data[i]);
+    	// });
     }
 
 };
@@ -10908,10 +10913,15 @@ function loadCsv() {
         stateFeatures = topojson.feature(geoJson,geoJson.objects.states).features;
         if (!--csvLoadsRemaining) initializePlotPlot();
     });
-    d3.text("data/ALL_FOODS_FOR_Rcleaned4R_NEWEST_1CUPLIQ.csv", function (text) {
+
+    // d3.text("data/AllFoodNoLiqQuoteFree.csv", function (text) {
+    d3.text("data/allFoodsNoLiq082614.csv", function (text) {
+    // d3.text("data/ALL_FOODS_FOR_Rcleaned4R_NEWEST_1CUPLIQ.csv", function (text) {
         var tmp = text.split("\n")
-        foodCals = tmp.map(function(d) { return parseFloat(d.split(",")[3]); }).slice(1,1604);
-        foodNames = tmp.map(function(d) { return d.split(",")[0].slice(1,d.split(",")[0].length-1); }).slice(1,1604);;
+        foodCals = tmp.map(function(d) { return parseFloat(d.split(",")[3]); }).slice(1,1438);
+        // foodNames = tmp.map(function(d) { return d.split(",")[0].slice(1,d.split(",")[0].length-1); }).slice(1,1456);;
+	// don't need to remove the quotes in this file
+	foodNames = tmp.map(function(d) { return d.split(",")[0]; }).slice(1,1438);;
         if (!--csvLoadsRemaining) initializePlotPlot();
     });
     d3.text("data/PHYS_ACT_2011-12edits_MTAs.csv", function (text) {
@@ -10925,24 +10935,29 @@ function loadCsv() {
         stateAct = tmp.map(function(d) { return d.split(",").slice(1,1000); });
         if (!--csvLoadsRemaining) initializePlotPlot();
     });
-    d3.text("data/stateFoodsMatrix_1CUPLIQ.csv", function (text) {
-        var tmp = text.split("\n").slice(1,1604);
+    // d3.text("data/stateFoodsMatrix_NOLIQUID.csv", function (text) {
+    d3.text("data/stateFoodsMatrix_NOLIQUID082614.csv", function (text) {
+    // d3.text("data/stateFoodsMatrix_1CUPLIQ.csv", function (text) {
+        var tmp = text.split("\n").slice(1,1438);
         stateFood = tmp.map(function(d) { return d.split(",").slice(1,1000); });
         if (!--csvLoadsRemaining) initializePlotPlot();
     });
-    d3.text("data/just_flux.csv", function (text) {
+    d3.text("data/caloric_balance091114.csv", function (text) {
+    // d3.text("data/flux_noLiq.txt", function (text) {
+    // d3.text("data/just_flux.csv", function (text) {
         var tmp = text.split("\n").slice(1,1000000);
-        stateFlux = tmp.map(function(d) { return parseFloat(d.split(",")[1]); });
+        stateFlux = tmp.map(function(d) { return parseFloat(d.split(",")[1]); }).slice(0,49);
         if (!--csvLoadsRemaining) initializePlotPlot();
     });
 };
 
 function initializePlotPlot() {
     // drap the map
+    plotBarChart(d3.select("#bars01"),stateFlux,stateFeatures);
     drawMap(d3.select("#map01"),stateFlux);
     allUSfood = stateFood.map(function(d) { return d3.sum(d); });
     allUSact = stateAct.map(function(d) { return d3.sum(d); });
-    plotBarChart(d3.select("#bars01"),stateFlux,stateFeatures);
+
 };
 
 initializePlot();

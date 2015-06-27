@@ -16,13 +16,17 @@ function plotBarChart(figure,data,geodata) {
     figcenter = width/2,
     leftOffsetStatic = 0.125*figwidth;
 
+    data = data.map(function(d) { return d-d3.mean(data); });
+
+    console.log(geodata);
+
     // do the sorting
     indices = Array(data.length);
     for (var i = 0; i < data.length; i++) { indices[i] = i; }
     // sort by abs magnitude
     // indices.sort(function(a,b) { return Math.abs(data[a]) < Math.abs(data[b]) ? 1 : Math.abs(data[a]) > Math.abs(data[b]) ? -1 : 0; });
     // sort by magnitude, parity preserving
-    indices.sort(function(a,b) { return data[a] < data[b] ? -1 : data[a] > data[b] ? 1 : 0; });
+    indices.sort(function(a,b) { return data[a] < data[b] ? 1 : data[a] > data[b] ? -1 : 0; });
     var sortedStates = Array(data.length);
     for (var i = 0; i < data.length; i++) { sortedStates[i] = [i,indices[i],geodata[indices[i]].properties.name,data[indices[i]]]; }
     console.log(sortedStates);
@@ -139,12 +143,16 @@ function plotBarChart(figure,data,geodata) {
 	.attr("fill", "#000000")
 	.attr("style", "text-anchor: middle;");
 
+    qcolor = d3.scale.quantize()
+	.domain(d3.extent(data))
+	.range([0,1,2,3,4,5,6,7,8]);
+
     axes.selectAll("rect.staterect")
 	.data(sortedStates)
 	.enter()
 	.append("rect")
-	.attr("fill", function(d,i) { if (data[3]>0) {return color(data[3]);} else {return color(d[3]); } })
-	.attr("class", function(d,i) { return d[2]+" staterect"; })
+	// .attr("fill", function(d,i) { if (data[3]>0) {return color(data[3]);} else {return color(d[3]); } })
+	.attr("class", function(d,i) { return d[2]+" staterect "+"q9-"+qcolor(d[3]); })
 	.attr("x", function(d,i) { if (d[3]>0) { return figcenter; } else { return x(d[3]); } })
 	.attr("y", function(d,i) { return y(i+1); })
 	.style({'opacity':'0.7','stroke-width':'1','stroke':'rgb(0,0,0)'})
