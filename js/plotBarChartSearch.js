@@ -25,7 +25,7 @@ function plotBarChart(figure,data,geodata) {
     indices.sort(function(a,b) { return data[a] < data[b] ? 1 : data[a] > data[b] ? -1 : 0; });
     sortedStates = Array(data.length);
     for (var i = 0; i < data.length; i++) { sortedStates[i] = [i,indices[i],geodata[indices[i]].properties.name,data[indices[i]]]; }
-    console.log(sortedStates);
+    //console.log(sortedStates);
 
     // remove an old figure if it exists
     figure.select(".canvas").remove();

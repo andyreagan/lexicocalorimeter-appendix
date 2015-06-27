@@ -1,0 +1,50 @@
+state,pctDiabetes
+Alabama,11.1
+Arizona,8.1
+Arkansas,9.2
+California,8.9
+Colorado,6
+Connecticut,6.4
+Delaware,7.7
+District of Columbia,8
+Florida,8.7
+Georgia,9.8
+Idaho,7.7
+Illinois,8.2
+Indiana,9.1
+Iowa,6.9
+Kansas,8
+Kentucky,10.1
+Louisiana,10.3
+Maine,7.4
+Maryland,8.9
+Massachusetts,7.2
+Michigan,9.2
+Minnesota,6.2
+Mississippi,11.3
+Missouri,8
+Montana,6.2
+Nebraska,7.1
+Nevada,8.1
+New Hampshire,7
+New Jersey,8.3
+New Mexico,8.1
+New York,8.4
+North Carolina,9.3
+North Dakota,6.9
+Ohio,9.4
+Oklahoma,10.1
+Oregon,7.2
+Pennsylvania,8.7
+Rhode Island,6.8
+South Carolina,9.9
+South Dakota,6.4
+Tennessee,10.2
+Texas,9.8
+Utah,7.1
+Vermont,5.8
+Virginia,8.1
+Washington,7.4
+West Virginia,10.7
+Wisconsin,7.1
+Wyoming,6.6

@@ -19,63 +19,7 @@
 	<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 	<![endif]-->
 
-    <script src="js/d3.andy.js" charset="utf-8"></script>
-    <script src="js/topojson.v1.min.js" charset="utf-8"></script>
-    <script src="js/plotShiftCalories.js" charset="utf-8"></script>
-    <script src="js/plotShiftActivity.js" charset="utf-8"></script>
-    <script src="js/plotBarChartSearch.js" charset="utf-8"></script>
-    <script src="js/shift.js" charset="utf-8"></script>
-    <script src="js/drawMap.js" charset="utf-8"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="js/typeahead.bundle.js"></script>
-    <script src="js/bootstrap.min.js"></script>
 
-    <script type="text/javascript">
-
-      var substringMatcher = function(strs) {
-        return function findMatches(q,cb) {
-          var matches, substringRegex;
-          console.log("matching "+q);
-          matches = [];
-          for (var i=0; i<foodNames.length; i++) {
-            if (foodNames[i].match(q)) {
-     	      matches.push({ value: foodNames[i]})   
-            }
-          }
-          cb(matches);
-        };
-      };
-
-      $(document).ready(function() {
-        console.log("initializing search");
-
-        $("#wordsearch").typeahead(
-          {
-            hint: false,
-            highlight: true,
-            minLength: 1,
-          },
-          {
-            name: "foodwords",
-            source: substringMatcher(["one","two"])
-          });
-        }).on("typeahead:selected",function(event,sugg,dataset) {
-              console.log(event);
-              console.log(sugg);
-              console.log(dataset);
-          for (var i=0; i<foodNames.length; i++) {
-            if (foodNames[i] === sugg.value) {
-					    console.log(i);
-           drawMap(d3.select("#map01"),stateFood[i].map(parseFloat).map(function(d,i) { return d/stateFoodTotals[i]; }));
-           plotBarChart(d3.select("#bars01"),stateFood[i].map(parseFloat).map(function(d,i) { return d/stateFoodTotals[i]; }),stateFeatures);
-              break;
-            }
-          }
-	      //drawWordStats(d3.select("#viewpanel"),sugg.value);
-              //$("#viewpanel").load('/definition/' + encodeURIComponent(sugg.value));
-              //$("#controlpanel").hide();
-            });
-    </script>
   </head>
   <body>
 
@@ -124,9 +68,9 @@
 	  <div class="col-xs-12 col-md-8">
 	    <div class="demo">
 	      <input id="wordsearch" class="typeahead" type="text" style="margin-left: 5px;" placeholder="bacon">
+	      <button class="btn btn-default" type="submit" id="showallmatching">Map all matching</button>
+	      <br>
 	    </div>
-	    <br>
-	    <br>
 	  </div>
 	  <div class="col-xs-0 col-md-2">
 	  </div>
@@ -152,64 +96,20 @@
 	</div>
       </div><!-- /.container-fluid -->
     </div><!-- /.container -->
-
-    <script>
-      function initializePlot() {
-          loadCsv();
-      }
-
-      function loadCsv() {
-          var csvLoadsRemaining = 6;
-          d3.json("data/us-states.topojson", function(data) {
-              geoJson = data;
-              stateFeatures = topojson.feature(geoJson,geoJson.objects.states).features;
-              if (!--csvLoadsRemaining) initializePlotPlot();
-          });
-          d3.text("data/ALL_FOODS_FOR_Rcleaned4R_NEWEST_1CUPLIQ.csv", function (text) {
-              var tmp = text.split("\n");
-              foodCals = tmp.map(function(d) { return parseFloat(d.split(",")[3]); });
-              foodNames = tmp.map(function(d) { return d.split(",")[0]; });
-              if (!--csvLoadsRemaining) initializePlotPlot();
-          });
-          d3.text("data/PHYS_ACT_2011-12edits_MTAs.csv", function (text) {
-              var tmp = text.split("\n").slice(1,1000000);
-              actCals = tmp.map(function(d) { return d.split(",")[3]; });
-              actNames = tmp.map(function(d) { return d.split(",")[0]; });
-              if (!--csvLoadsRemaining) initializePlotPlot();
-          });
-          d3.text("data/finalStateActivityMatrix.csv", function (text) {
-              var tmp = text.split("\n").slice(1,13420);
-              stateAct = tmp.map(function(d) { return d.split(",").slice(1,1000); });
-              if (!--csvLoadsRemaining) initializePlotPlot();
-          });
-          d3.text("data/stateFoodsMatrix_1CUPLIQ.csv", function (text) {
-              var tmp = text.split("\n").slice(1,1617);
-              stateFood = tmp.map(function(d) { return d.split(",").slice(1,1000); });
-              if (!--csvLoadsRemaining) initializePlotPlot();
-          });
-          d3.text("data/just_flux.csv", function (text) {
-              var tmp = text.split("\n").slice(1,1000000);
-              stateFlux = tmp.map(function(d) { return parseFloat(d.split(",")[1]); });
-              if (!--csvLoadsRemaining) initializePlotPlot();
-          });
-      };
-
-      function initializePlotPlot() {
-	   // drap the map
-           //drawMap(d3.select("#map01"),stateFlux);
-           //allUSfood = stateFood.map(function(d) { return d3.sum(d); });
-           //allUSact = stateAct.map(function(d) { return d3.sum(d); });
-           //plotBarChart(d3.select("#bars01"),stateFlux,stateFeatures);
-           stateFoodTotals = Array(stateFood[0].length);
-           for (var i=0; i<stateFoodTotals.length; i++) {
-               stateFoodTotals[i] = d3.sum(stateFood.map(function(d) { return d[i]; }));
-						   }
-      };
-
-      initializePlot();
-</script>
+    <!-- <script src="js/d3.andy.js" charset="utf-8"></script> -->
+    <!-- <script src="js/urllib.js" charset="utf-8"></script> -->
+    <!-- <script src="js/topojson.v1.min.js" charset="utf-8"></script> -->
+    <!-- <script src="js/plotBarChartSearch.js" charset="utf-8"></script> -->
+    <!-- <script src="js/drawMap.js" charset="utf-8"></script> -->
+    <!-- <script src="jquery.min.js" charset="utf-8"></script> -->
+    <!-- <script src="js/typeahead.bundle.js"></script> -->
+    <!-- <script src="js/bootstrap.min.js"></script> -->
+    <!-- <script src="js/foodphrases-on-load.js"></script> -->
+    <script src="js/foodphrases.js"></script>
   </body>
 </html>
+
+
 
 
 

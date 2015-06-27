@@ -1,0 +1,50 @@
+state,flux
+Alabama,21.35
+Arizona,-7.11
+Arkansas,21.4
+California,-8.78
+Colorado,-46.05
+Connecticut,7.57
+Delaware,18.24
+District of Columbia,-3.35
+Florida,-4.41
+Georgia,13.65
+Idaho,-3.68
+Illinois,4.37
+Indiana,8.42
+Iowa,-1.98
+Kansas,4.29
+Kentucky,15.46
+Louisiana,25.46
+Maine,-21.7
+Maryland,11.89
+Massachusetts,-0.97
+Michigan,15.59
+Minnesota,-18.28
+Mississippi,30.31
+Missouri,0.92
+Montana,-13.59
+Nebraska,-5.04
+Nevada,-3.55
+New Hampshire,-19
+New Jersey,10.61
+New Mexico,-0.46
+New York,-9
+North Carolina,11.09
+North Dakota,-1.9
+Ohio,14.38
+Oklahoma,4.46
+Oregon,-16.16
+Pennsylvania,9.33
+Rhode Island,-1.25
+South Carolina,11.64
+South Dakota,3.47
+Tennessee,7.02
+Texas,10.85
+Utah,-23.94
+Vermont,-33.28
+Virginia,4.55
+Washington,-7.2
+West Virginia,18.9
+Wisconsin,-6.67
+Wyoming,-47.88

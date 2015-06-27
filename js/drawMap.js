@@ -81,6 +81,7 @@ function drawMap(figure,data) {
 
 
     function state_clicked(d,i) { 
+
 	// next line verifies that the data and json line up
 	// console.log(d.properties.name); console.log(allData[i].name); 
 
