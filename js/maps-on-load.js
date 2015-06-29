@@ -42,7 +42,7 @@ function loadCsv() {
         stateFood = tmp.map(function(d) { return d.split(",").slice(1,1000); });
         if (!--csvLoadsRemaining) initializePlotPlot();
     });
-    d3.text("data/caloric_balance091114.csv", function (text) {
+    d3.text("data/caloric_balance06292015.csv", function (text) {
     // d3.text("data/flux_noLiq.txt", function (text) {
     // d3.text("data/just_flux.csv", function (text) {
         var tmp = text.split("\n").slice(1,1000000);

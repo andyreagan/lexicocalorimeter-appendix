@@ -27,7 +27,10 @@ function plotBarChart(figure,data,geodata) {
     // indices.sort(function(a,b) { return Math.abs(data[a]) < Math.abs(data[b]) ? 1 : Math.abs(data[a]) > Math.abs(data[b]) ? -1 : 0; });
     // sort by magnitude, parity preserving
     indices.sort(function(a,b) { return data[a] < data[b] ? 1 : data[a] > data[b] ? -1 : 0; });
-    var sortedStates = Array(data.length);
+    
+    // global
+    // var sortedStates;
+    sortedStates = Array(data.length);
     for (var i = 0; i < data.length; i++) { sortedStates[i] = [i,indices[i],geodata[indices[i]].properties.name,data[indices[i]]]; }
     console.log(sortedStates);
 
@@ -143,7 +146,7 @@ function plotBarChart(figure,data,geodata) {
 	.attr("fill", "#000000")
 	.attr("style", "text-anchor: middle;");
 
-    qcolor = d3.scale.quantize()
+    var qcolor = d3.scale.quantize()
 	.domain(d3.extent(data))
 	.range([0,1,2,3,4,5,6,7,8]);
 
@@ -158,8 +161,9 @@ function plotBarChart(figure,data,geodata) {
 	.style({'opacity':'0.7','stroke-width':'1','stroke':'rgb(0,0,0)'})
 	.attr("height",function(d,i) { return 15; } )
 	.attr("width",function(d,i) { if (d[3]>0) {return x(d[3])-figcenter;} else {return figcenter-x(d[3]); } } )
-	.on('mouseover', function(d){
+	.on('mouseover', function(d,i){
             var rectSelection = d3.select(this).style({opacity:'1.0'});
+	    state_hover(d,i);
 	})
 	.on('mouseout', function(d){
             var rectSelection = d3.select(this).style({opacity:'0.7'});
@@ -210,6 +214,34 @@ function plotBarChart(figure,data,geodata) {
     // 	// all of the lower shift text
     // 	axes.selectAll("text.shifttext").attr("x",function(d,i) { if (d>0) {return x(d)+2;} else {return x(d)-2; } } );
     // }
+
+    function state_hover(d,i) { 
+	// next line verifies that the data and json line up
+	// console.log(d.properties.name); console.log(allData[i].name.split(" ")[allData[i].name.split(" ").length-1]); 
+	// d3.select(this).attr("fill","red");
+	console.log(i);
+	shiftComp = sortedStates[i][1];
+	shiftCompName = sortedStates[i][2];
+	console.log(shiftCompName);
+	// if (shiftRef !== shiftComp) {
+	shiftObj = shift(allUSfood,stateFood.map(function(d) { return parseFloat(d[shiftComp]); }),foodCals,foodNames);
+
+	plotShift(d3.select('#shift01'),shiftObj.sortedMag.slice(0,200),
+		  shiftObj.sortedType.slice(0,200),
+		  shiftObj.sortedWords.slice(0,200),
+		  shiftObj.sumTypes,
+		  shiftObj.refH,
+		  shiftObj.compH);
+
+	shiftObj2 = shift(allUSact,stateAct.map(function(d) { return parseFloat(d[shiftComp]); }),actCals,actNames);
+
+	plotShiftActivity(d3.select('#shift02'),shiftObj2.sortedMag.slice(0,200),
+			  shiftObj2.sortedType.slice(0,200),
+			  shiftObj2.sortedWords.slice(0,200),
+			  shiftObj2.sumTypes,
+			  shiftObj2.refH,
+			  shiftObj2.compH);
+    }
 };
 
 

@@ -10418,7 +10418,10 @@ function plotBarChart(figure,data,geodata) {
     // indices.sort(function(a,b) { return Math.abs(data[a]) < Math.abs(data[b]) ? 1 : Math.abs(data[a]) > Math.abs(data[b]) ? -1 : 0; });
     // sort by magnitude, parity preserving
     indices.sort(function(a,b) { return data[a] < data[b] ? 1 : data[a] > data[b] ? -1 : 0; });
-    var sortedStates = Array(data.length);
+    
+    // global
+    // var sortedStates;
+    sortedStates = Array(data.length);
     for (var i = 0; i < data.length; i++) { sortedStates[i] = [i,indices[i],geodata[indices[i]].properties.name,data[indices[i]]]; }
     console.log(sortedStates);
 
@@ -10534,7 +10537,7 @@ function plotBarChart(figure,data,geodata) {
 	.attr("fill", "#000000")
 	.attr("style", "text-anchor: middle;");
 
-    qcolor = d3.scale.quantize()
+    var qcolor = d3.scale.quantize()
 	.domain(d3.extent(data))
 	.range([0,1,2,3,4,5,6,7,8]);
 
@@ -10549,8 +10552,9 @@ function plotBarChart(figure,data,geodata) {
 	.style({'opacity':'0.7','stroke-width':'1','stroke':'rgb(0,0,0)'})
 	.attr("height",function(d,i) { return 15; } )
 	.attr("width",function(d,i) { if (d[3]>0) {return x(d[3])-figcenter;} else {return figcenter-x(d[3]); } } )
-	.on('mouseover', function(d){
+	.on('mouseover', function(d,i){
             var rectSelection = d3.select(this).style({opacity:'1.0'});
+	    state_hover(d,i);
 	})
 	.on('mouseout', function(d){
             var rectSelection = d3.select(this).style({opacity:'0.7'});
@@ -10601,6 +10605,34 @@ function plotBarChart(figure,data,geodata) {
     // 	// all of the lower shift text
     // 	axes.selectAll("text.shifttext").attr("x",function(d,i) { if (d>0) {return x(d)+2;} else {return x(d)-2; } } );
     // }
+
+    function state_hover(d,i) { 
+	// next line verifies that the data and json line up
+	// console.log(d.properties.name); console.log(allData[i].name.split(" ")[allData[i].name.split(" ").length-1]); 
+	// d3.select(this).attr("fill","red");
+	console.log(i);
+	shiftComp = sortedStates[i][1];
+	shiftCompName = sortedStates[i][2];
+	console.log(shiftCompName);
+	// if (shiftRef !== shiftComp) {
+	shiftObj = shift(allUSfood,stateFood.map(function(d) { return parseFloat(d[shiftComp]); }),foodCals,foodNames);
+
+	plotShift(d3.select('#shift01'),shiftObj.sortedMag.slice(0,200),
+		  shiftObj.sortedType.slice(0,200),
+		  shiftObj.sortedWords.slice(0,200),
+		  shiftObj.sumTypes,
+		  shiftObj.refH,
+		  shiftObj.compH);
+
+	shiftObj2 = shift(allUSact,stateAct.map(function(d) { return parseFloat(d[shiftComp]); }),actCals,actNames);
+
+	plotShiftActivity(d3.select('#shift02'),shiftObj2.sortedMag.slice(0,200),
+			  shiftObj2.sortedType.slice(0,200),
+			  shiftObj2.sortedWords.slice(0,200),
+			  shiftObj2.sumTypes,
+			  shiftObj2.refH,
+			  shiftObj2.compH);
+    }
 };
 
 
@@ -10710,12 +10742,13 @@ function drawMap(figure,data) {
     var w = parseInt(d3.select('#map01').style('width'));
     var h = w*.6;
 
+    // mean 0 the data
+    data = data.map(function(d) { return d-d3.mean(data); });
+
     //Define map projection
     var projection = d3.geo.albersUsa()
 	.translate([w/2, h/2])
 	.scale(w*1.3);
-
-    qcolor.domain(d3.extent(data))
 
     //Define path generator
     var path = d3.geo.path()
@@ -10757,12 +10790,16 @@ function drawMap(figure,data) {
     //Bind data and create one path per GeoJSON feature
     var states = canvas.selectAll("path")
 	.data(stateFeatures);
+
+    var qcolor = d3.scale.quantize()
+	.domain(d3.extent(data))
+	.range([0,1,2,3,4,5,6,7,8]);
     
     states.enter()
 	.append("path")
 	.attr("d", function(d,i) { return path(d.geometry); } )
 	.attr("id", function(d,i) { return d.properties.name; } )
-	.attr("class",function(d,i) { return "state map "+d.properties.name[0]+d.properties.name.split(" ")[d.properties.name.split(" ").length-1]+" q9-"+qcolor(data[i]-d3.mean(data)); } )
+	.attr("class",function(d,i) { return "state map "+d.properties.name[0]+d.properties.name.split(" ")[d.properties.name.split(" ").length-1]+" q9-"+qcolor(data[i]); } )
         //.on("mousedown",state_clicked)
         //.on("mouseover",function(d,i) { console.log(d.properties.name); } );
 	.on("mouseover",state_hover)

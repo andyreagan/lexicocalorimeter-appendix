@@ -9635,12 +9635,13 @@ function drawMap(figure,data) {
     var w = parseInt(d3.select('#map01').style('width'));
     var h = w*.6;
 
+    // mean 0 the data
+    data = data.map(function(d) { return d-d3.mean(data); });
+
     //Define map projection
     var projection = d3.geo.albersUsa()
 	.translate([w/2, h/2])
 	.scale(w*1.3);
-
-    qcolor.domain(d3.extent(data))
 
     //Define path generator
     var path = d3.geo.path()
@@ -9682,12 +9683,16 @@ function drawMap(figure,data) {
     //Bind data and create one path per GeoJSON feature
     var states = canvas.selectAll("path")
 	.data(stateFeatures);
+
+    var qcolor = d3.scale.quantize()
+	.domain(d3.extent(data))
+	.range([0,1,2,3,4,5,6,7,8]);
     
     states.enter()
 	.append("path")
 	.attr("d", function(d,i) { return path(d.geometry); } )
 	.attr("id", function(d,i) { return d.properties.name; } )
-	.attr("class",function(d,i) { return "state map "+d.properties.name[0]+d.properties.name.split(" ")[d.properties.name.split(" ").length-1]+" q9-"+qcolor(data[i]-d3.mean(data)); } )
+	.attr("class",function(d,i) { return "state map "+d.properties.name[0]+d.properties.name.split(" ")[d.properties.name.split(" ").length-1]+" q9-"+qcolor(data[i]); } )
         //.on("mousedown",state_clicked)
         //.on("mouseover",function(d,i) { console.log(d.properties.name); } );
 	.on("mouseover",state_hover)
