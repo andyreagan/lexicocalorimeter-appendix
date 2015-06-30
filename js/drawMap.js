@@ -22,8 +22,11 @@ function drawMap(figure,data) {
 
     var projection = d3.geo.equirectangular()
     // .translate([.01,0])
-	.center([-87,38])
-    	.scale(1650);
+    // these work for col-sm-5
+	// .center([-87,38])
+    // .scale(1650);
+    	.center([-83,37])
+    	.scale(1360);
 
     //Define path generator
     var path = d3.geo.path()

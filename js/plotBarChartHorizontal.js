@@ -7,13 +7,13 @@ function plotBarChart(figure,data,geodata) {
            with the names
 
     */
-    var margin = {top: 0, right: 0, bottom: 0, left: 80};
-    var figwidth = parseInt(d3.select('#bars01').style('width')) - margin.left - margin.right;
+    var margin = {top: 0, right: 0, bottom: 40, left: 60};
+    var figwidth = parseInt(d3.select('#bars01').style('width'));
     var aspectRatio = 2.0;
     // var figheight = parseInt(d3.select('#bars01').style('width'))*aspectRatio - margin.top - margin.bottom;
     var figheight = 230;
     var width = figwidth-margin.left-margin.right;
-    var height = .8875*figheight;
+    var height = figheight-margin.top-margin.bottom;
     // center vertically
     var figcenter = height/2;
     var textSize = 12;
@@ -66,7 +66,7 @@ function plotBarChart(figure,data,geodata) {
     // create the axes themselves
     var axes = canvas.append("g")
 	.attr("transform", "translate(" + (margin.left) + "," +
-	      ((1 - 0.215 - 0.775) * figheight) + ")")
+	      (margin.top) + ")")
 	.attr("width", width)
 	.attr("height", height)
 	.attr("class", "main");
@@ -90,6 +90,7 @@ function plotBarChart(figure,data,geodata) {
     // axis creation function
     var create_yAxis = function() {
 	return d3.svg.axis()
+	    .ticks(5)
 	    .scale(y) //linear scale function
 	    .orient("left"); }
 
