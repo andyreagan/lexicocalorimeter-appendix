@@ -11,7 +11,7 @@ function plotBarChart(figure,data,geodata) {
     var figwidth = parseInt(d3.select('#bars01').style('width')) - margin.left - margin.right;
     var aspectRatio = 2.0;
     // var figheight = parseInt(d3.select('#bars01').style('width'))*aspectRatio - margin.top - margin.bottom;
-    var figheight = 630;
+    var figheight = 500;
     var width = .835*figwidth;
     var height = .8875*figheight;
     var figcenter = width/2;
