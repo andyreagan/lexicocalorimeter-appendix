@@ -100,13 +100,9 @@ function drawMap(figure,data) {
 	    "text-anchor": "middle",
 	    "dominant-baseline": "middle",
 	})
-	.text(function(d,i) { return d.properties.abbr; } );
-	// .attr("class",function(d,i) { return "state map "+d.properties.name[0]+d.properties.name.split(" ")[d.properties.name.split(" ").length-1]+" q9-"+qcolor(data[i]); } )
-        //.on("mousedown",state_clicked)
-        //.on("mouseover",function(d,i) { console.log(d.properties.name); } );
-	// .on("mouseover",state_hover)
-        // .on("mouseout",state_unhover);
-
+	.text(function(d,i) { return d.properties.abbr; } )
+    	.on("mouseover",state_hover)
+        .on("mouseout",state_unhover);
 
     function state_clicked(d,i) { 
 	// next line verifies that the data and json line up
