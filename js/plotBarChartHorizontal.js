@@ -7,17 +7,17 @@ function plotBarChart(figure,data,geodata) {
            with the names
 
     */
-    var margin = {top: 0, right: 0, bottom: 0, left: 0};
+    var margin = {top: 0, right: 0, bottom: 0, left: 80};
     var figwidth = parseInt(d3.select('#bars01').style('width')) - margin.left - margin.right;
     var aspectRatio = 2.0;
     // var figheight = parseInt(d3.select('#bars01').style('width'))*aspectRatio - margin.top - margin.bottom;
-    var figheight = 500;
-    var width = .835*figwidth;
+    var figheight = 230;
+    var width = figwidth-margin.left-margin.right;
     var height = .8875*figheight;
-    var figcenter = width/2;
-    var leftOffsetStatic = 0.165*figwidth;
-    var textSize = 10;
-    var barHeight = 8;
+    // center vertically
+    var figcenter = height/2;
+    var textSize = 12;
+    var barHeight = 15;
 
     data = data.map(function(d) { return d-d3.mean(data); });
 
@@ -46,15 +46,15 @@ function plotBarChart(figure,data,geodata) {
 	.attr("class","canvas")
 
     // x scale, maps all the data to 
-    var absDataMax = d3.max([d3.max(data),-d3.min(data)]);
     x = d3.scale.linear()
-	.domain([-absDataMax,absDataMax])
-	.range([5,width-10]);
+	.domain([data.length,1])
+	.range([width-20, 5]); 
 
     // linear scale function
+    var absDataMax = d3.max([d3.max(data),-d3.min(data)]);
     var y =  d3.scale.linear()
-	.domain([data.length,1])
-	.range([height-20, 5]); 
+    	.domain([-absDataMax,absDataMax])
+	.range([5,height-10]);
 
     // // zoom object for the axes
     // var zoom = d3.behavior.zoom()
@@ -65,7 +65,7 @@ function plotBarChart(figure,data,geodata) {
 
     // create the axes themselves
     var axes = canvas.append("g")
-	.attr("transform", "translate(" + (0.125 * figwidth) + "," +
+	.attr("transform", "translate(" + (margin.left) + "," +
 	      ((1 - 0.215 - 0.775) * figheight) + ")")
 	.attr("width", width)
 	.attr("height", height)
@@ -132,7 +132,7 @@ function plotBarChart(figure,data,geodata) {
     // 	.attr("clip-path","url(#clip)");
 
     var ylabel = canvas.append("text")
-	.text("State Rank")
+	.text("Flux")
 	.attr("class","axes-text")
 	.attr("x",(figwidth-width)/4)
 	.attr("y",figheight/2+30)
@@ -141,7 +141,7 @@ function plotBarChart(figure,data,geodata) {
 	.attr("transform", "rotate(-90.0," + (figwidth-width)/4 + "," + (figheight/2+30) + ")");
 
     var xlabel = canvas.append("text")
-	.text("Flux")
+	.text("State Rank")
 	.attr("class","axes-text")
 	.attr("x",width/2+(figwidth-width)/2)
 	.attr("y",3*(figheight-height)/4+height)
@@ -159,11 +159,11 @@ function plotBarChart(figure,data,geodata) {
 	.append("rect")
 	// .attr("fill", function(d,i) { if (data[3]>0) {return color(data[3]);} else {return color(d[3]); } })
 	.attr("class", function(d,i) { return d[2]+" staterect "+"q9-"+qcolor(d[3]); })
-	.attr("x", function(d,i) { if (d[3]>0) { return figcenter; } else { return x(d[3]); } })
-	.attr("y", function(d,i) { return y(i+1); })
+	.attr("y", function(d,i) { if (d[3]>0) { return figcenter; } else { return y(d[3]); } })
+	.attr("x", function(d,i) { return x(i+1); })
 	.style({'opacity':'0.7','stroke-width':'1','stroke':'rgb(0,0,0)'})
-	.attr("height",function(d,i) { return barHeight; } )
-	.attr("width",function(d,i) { if (d[3]>0) {return x(d[3])-figcenter;} else {return figcenter-x(d[3]); } } )
+	.attr("width",function(d,i) { return barHeight; } )
+	.attr("height",function(d,i) { if (d[3]>0) {return y(d[3])-figcenter;} else {return figcenter-y(d[3]); } } )
 	.on('mouseover', function(d,i){
             var rectSelection = d3.select(this).style({opacity:'1.0'});
 	    state_hover(d,i);
@@ -177,10 +177,12 @@ function plotBarChart(figure,data,geodata) {
 	.enter()
 	.append("text")
 	.attr("class", function(d,i) { return d[2]+" statetext"; })
-	.attr("x", function(d,i) { if (d[3]>0) { return figcenter-6; } else { return figcenter+6; } })
-	.style({"text-anchor": function(d,i) { if (d[3]>0) { return "end";} else { return "start";}},
-		"font-size": textSize})
-	.attr("y",function(d,i) { return y(i+1)+11; } )
+        .attr("y", function(d,i) { if (d[3]>0) { return figcenter-4; } else { return figcenter+4; } })
+	.attr("x",function(d,i) { return x(i+1)+11; } )
+	.attr("transform", function(d,i) { return "rotate(-50 "+(x(i+1)+11)+","+(figcenter-Math.abs(d[3])/d[3]*7)+")"; })
+	.style({"text-anchor": function(d,i) { if (d[3]>0) { return "start";} else { return "end";}},
+		"font-size": textSize,
+	       })
         .text(function(d,i) { return d[2]; });
 
     // d3.select(window).on("resize.shiftplot",resizeshift);
@@ -235,7 +237,7 @@ function plotBarChart(figure,data,geodata) {
 		  shiftObj.sortedWords.slice(0,200),
 		  shiftObj.sumTypes,
 		  shiftObj.refH,
-		  shiftObj.compH,shift_height);
+		  shiftObj.compH,450);
 
 	shiftObj2 = shift(allUSact,stateAct.map(function(d) { return parseFloat(d[shiftComp]); }),actCals,actNames);
 
@@ -244,7 +246,7 @@ function plotBarChart(figure,data,geodata) {
 			  shiftObj2.sortedWords.slice(0,200),
 			  shiftObj2.sumTypes,
 			  shiftObj2.refH,
-			  shiftObj2.compH,shift_height);
+			  shiftObj2.compH,450);
     }
 };
 

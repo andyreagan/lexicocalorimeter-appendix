@@ -123,8 +123,8 @@ path.state:hover { fill: red; }
     /* padding-right: 0; */
 }
 
-/* p.sumtext { */
-/*     margin-bottom: 0; */
-/* } */
+p.sumtext {
+    margin-bottom: 0;
+}
 
 

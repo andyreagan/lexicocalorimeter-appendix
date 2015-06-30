@@ -10,15 +10,20 @@ function drawMap(figure,data) {
 
     //Width and height
     var w = parseInt(d3.select('#map01').style('width'));
-    var h = w*.6;
+    var h = w*.9;
 
     // mean 0 the data
     data = data.map(function(d) { return d-d3.mean(data); });
 
-    //Define map projection
-    var projection = d3.geo.albersUsa()
-	.translate([w/2, h/2])
-	.scale(w*1.3);
+    // //Define map projection
+    // var projection = d3.geo.albersUsa()
+    // 	.translate([w/2, h/2])
+    // 	.scale(w*1.3);
+
+    var projection = d3.geo.equirectangular()
+    // .translate([.01,0])
+	.center([-87,38])
+    	.scale(1650);
 
     //Define path generator
     var path = d3.geo.path()
@@ -54,8 +59,6 @@ function drawMap(figure,data) {
 	.attr("class", "canvas")
 	.attr("width", w)
 	.attr("height", h);
-
-    stateFeatures = topojson.feature(geoJson,geoJson.objects.states).features;
 
     //Bind data and create one path per GeoJSON feature
     var states = canvas.selectAll("path")
@@ -108,7 +111,7 @@ function drawMap(figure,data) {
 		      shiftObj.sortedWords.slice(0,200),
 		      shiftObj.sumTypes,
 		      shiftObj.refH,
-		      shiftObj.compH);
+		      shiftObj.compH,shift_height);
 	}
     }
 
@@ -126,7 +129,7 @@ function drawMap(figure,data) {
 		  shiftObj.sortedWords.slice(0,200),
 		  shiftObj.sumTypes,
 		  shiftObj.refH,
-		  shiftObj.compH);
+		  shiftObj.compH,shift_height);
 
 	shiftObj2 = shift(allUSact,stateAct.map(function(d) { return parseFloat(d[i]); }),actCals,actNames);
 
@@ -135,7 +138,7 @@ function drawMap(figure,data) {
 		  shiftObj2.sortedWords.slice(0,200),
 		  shiftObj2.sumTypes,
 		  shiftObj2.refH,
-		  shiftObj2.compH);
+			  shiftObj2.compH,shift_height);
 	// }
 	// if (shiftRef !== shiftComp) { 
 	//     //console.log("comparison "+allData[shiftComp].name);

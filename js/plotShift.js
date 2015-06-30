@@ -7,19 +7,22 @@ function plotShift(figure,sortedMag,sortedType,sortedWords,sumTypes,refH,compH) 
        for each word
 
     */
-    var margin = {top: 0, right: 0, bottom: 0, left: 0},
-    figwidth = parseInt(d3.select('#shift01').style('width')) - margin.left - margin.right,
-    figheight = 600 - margin.top - margin.bottom,
-    width = .775*figwidth,
-    height = .8875*figheight,
-    figcenter = width/2,
-    yHeight = 101,
-    clipHeight = 100,
-    barHeight = 95,
-    numWords = 24,
-    shiftTypeSelect = false,
-    leftOffsetStatic = 0.125*figwidth;
 
+        var margin = {top: 0, right: 0, bottom: 0, left: 0};
+    var figwidth = parseInt(d3.select('#shift01').style('width')) - margin.left - margin.right;
+    var figheight = 600 - margin.top - margin.bottom;
+    var width = .873*figwidth;
+    var height = .8875*figheight;
+    var figcenter = width/2;
+    var yHeight = 90;
+    var clipHeight = yHeight-1;
+    var barHeight = yHeight-6;;
+    var numWords = 31;
+    var shiftTypeSelect = false;
+    var leftOffsetStatic = 0.125*figwidth;
+    var rectHeight = 11;
+    var sumRectHeight = 15;
+    
     // remove an old figure if it exists
     figure.select(".canvas").remove();
 
