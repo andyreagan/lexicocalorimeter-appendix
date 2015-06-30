@@ -23,7 +23,7 @@ function drawMap(figure,data) {
     var projection = d3.geo.equirectangular()
     // .translate([.01,0])
     // these work for col-sm-5
-	// .center([-87,38])
+    // .center([-87,38])
     // .scale(1650);
     	.center([-83,37])
     	.scale(1360);
@@ -67,6 +67,9 @@ function drawMap(figure,data) {
     var states = canvas.selectAll("path")
 	.data(stateFeatures);
 
+    var state_text = canvas.selectAll("text")
+	.data(stateFeatures);
+
     var qcolor = d3.scale.quantize()
 	.domain(d3.extent(data))
 	.range([0,1,2,3,4,5,6,7,8]);
@@ -86,6 +89,23 @@ function drawMap(figure,data) {
     states
 	.attr("stroke","black")
 	.attr("stroke-width","1");
+
+
+    state_text.enter()
+	.append("text")
+    // .attr("transform", function(d,i) { return "translate("+(path.centroid(d.geometry)[0]-9)+","+(path.centroid(d.geometry)[1]+5)+")"; } )
+	.attr("x", function(d,i) { return path.centroid(d.geometry)[0]; })
+    	.attr("y", function(d,i) { return path.centroid(d.geometry)[1]; })
+	.style({
+	    "text-anchor": "middle",
+	    "dominant-baseline": "middle",
+	})
+	.text(function(d,i) { return d.properties.abbr; } );
+	// .attr("class",function(d,i) { return "state map "+d.properties.name[0]+d.properties.name.split(" ")[d.properties.name.split(" ").length-1]+" q9-"+qcolor(data[i]); } )
+        //.on("mousedown",state_clicked)
+        //.on("mouseover",function(d,i) { console.log(d.properties.name); } );
+	// .on("mouseover",state_hover)
+        // .on("mouseout",state_unhover);
 
 
     function state_clicked(d,i) { 

@@ -17,7 +17,7 @@ function plotBarChart(figure,data,geodata) {
     // center vertically
     var figcenter = height/2;
     var textSize = 12;
-    var barHeight = 15;
+    var barHeight = 18;
 
     data = data.map(function(d) { return d-d3.mean(data); });
 
