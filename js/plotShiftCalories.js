@@ -7,19 +7,20 @@ function plotShift(figure,sortedMag,sortedType,sortedWords,sumTypes,refH,compH) 
        for each word
 
     */
-    var margin = {top: 0, right: 0, bottom: 0, left: 0},
-    figwidth = parseInt(d3.select('#shift01').style('width')) - margin.left - margin.right,
-    figheight = 600 - margin.top - margin.bottom,
-    width = .775*figwidth,
-    height = .8875*figheight,
-    figcenter = width/2,
-    yHeight = 101,
-    clipHeight = 100,
-    barHeight = 95,
-    numWords = 24,
-    shiftTypeSelect = false,
-    leftOffsetStatic = 0.125*figwidth;
-
+    var margin = {top: 0, right: 0, bottom: 0, left: 0};
+    var figwidth = parseInt(d3.select('#shift01').style('width')) - margin.left - margin.right;
+    var figheight = 600 - margin.top - margin.bottom;
+    var width = .873*figwidth;
+    var height = .8875*figheight;
+    var figcenter = width/2;
+    var yHeight = 90;
+    var clipHeight = yHeight-1;
+    var barHeight = yHeight-6;;
+    var numWords = 31;
+    var shiftTypeSelect = false;
+    var leftOffsetStatic = 0.125*figwidth;
+    var rectHeight = 11;
+    var sumRectHeight = 15;
     // remove an old figure if it exists
     figure.select(".canvas").remove();
 
@@ -152,9 +153,9 @@ function plotShift(figure,sortedMag,sortedType,sortedWords,sumTypes,refH,compH) 
             if (d>0) { return figcenter; } 
             else { return topScale(d)} } )
         // don't move the fourth bar down as much
-	.attr("y",function(d,i) { if (i<3) { return i*22+7;} else { return i*22+1;} } )
+	.attr("y",function(d,i) { if (i<3) { return i*19+7;} else { return i*19+3;} } )
 	.style({'opacity':'0.7','stroke-width':'1','stroke':'rgb(0,0,0)'})
-	.attr("height",function(d,i) { return 17; } )
+	.attr("height",function(d,i) { return sumRectHeight; } )
 	.attr("width",function(d,i) { if (d>0) {return topScale(d)-figcenter;} else {return figcenter-topScale(d); } } )
 	.on('mouseover', function(d){
             var rectSelection = d3.select(this).style({opacity:'1.0'});
@@ -193,7 +194,7 @@ function plotShift(figure,sortedMag,sortedType,sortedWords,sumTypes,refH,compH) 
 	.append("text")
 	.attr("class", "sumtextR")
 	.style("text-anchor",function(d,i) { if (d>0) {return "start";} else {return "end";} })
-	.attr("y",function(d,i) { if (i<2) {return i*22+22;} else if ((sumTypes[3]+sumTypes[1])*(sumTypes[0]+sumTypes[2])<0) {return i*22+39; } else {return i*22+30; } })
+	.attr("y",function(d,i) { if (i<2) {return i*19+19;} else if ((sumTypes[3]+sumTypes[1])*(sumTypes[0]+sumTypes[2])<0) {return i*19+36; } else {return i*19+27; } })
 	.text(function(d,i) { if (i == 0) {return "\u2211+\u2191";} if (i==1) { return"\u2211-\u2193";} else { return "\u2211";} } )
     // push to the side of d
 	.attr("x",function(d,i) { return topScale(d)+5*d/Math.abs(d); });
@@ -244,9 +245,9 @@ function plotShift(figure,sortedMag,sortedType,sortedWords,sumTypes,refH,compH) 
 		    else { return topScale(d)} }
 	    }
 	})
-	.attr("y",function(d,i) { return i*22+7; } )
+	.attr("y",function(d,i) { return i*19+7; } )
 	.style({'opacity':'0.7','stroke-width':'1','stroke':'rgb(0,0,0)'})
-	.attr("height",function(d,i) { return 17; } )
+	.attr("height",function(d,i) { return sumRectHeight; } )
 	.attr("width",function(d,i) { if (d>0) {return topScale(d)-figcenter;} else {return figcenter-topScale(d); } } )
 	.on('mouseover', function(d){
             var rectSelection = d3.select(this).style({opacity:'1.0'});
@@ -285,7 +286,7 @@ function plotShift(figure,sortedMag,sortedType,sortedWords,sumTypes,refH,compH) 
 	.append("text")
 	.attr("class", "sumtextL")
 	.style("text-anchor", "end")
-	.attr("y",function(d,i) { return i*22+22; } )
+	.attr("y",function(d,i) { return i*19+19; } )
 	.text(function(d,i) { if (i == 0) {return "\u2211+\u2193";} else { return"\u2211-\u2191";} })
 	.attr("x",function(d,i) { return topScale(d)-5; });
     
@@ -353,7 +354,7 @@ function plotShift(figure,sortedMag,sortedType,sortedWords,sumTypes,refH,compH) 
              )
 	.attr("y",function(d,i) { return y(i+1); } )
 	.style({'opacity':'0.7','stroke-width':'1','stroke':'rgb(0,0,0)'})
-	.attr("height",function(d,i) { return 15; } )
+	.attr("height",function(d,i) { return rectHeight; } )
 	.attr("width",function(d,i) { if (d>0) {return x(d)-figcenter;} else {return figcenter-x(d); } } )
 	.on('mouseover', function(d){
             var rectSelection = d3.select(this).style({opacity:'1.0'});
@@ -431,8 +432,8 @@ function plotShift(figure,sortedMag,sortedType,sortedWords,sumTypes,refH,compH) 
 	    axes.selectAll("rect.shiftrect").attr("y", function(d,i) { return y(i+1) });
 	    axes.selectAll("text.shifttext").attr("y", function(d,i) { return y(i+1)+11 });
 	}
-	d3.select(".y.axis").call(yAxis);
-	d3.selectAll(".tick line").style({'stroke':'black'});
+	figure.select(".y.axis").call(yAxis);
+	figure.selectAll(".tick line").style({'stroke':'black'});
     };
 
     console.log(leftOffsetStatic+width);
