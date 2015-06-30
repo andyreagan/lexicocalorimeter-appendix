@@ -133,7 +133,7 @@ function plotBarChart(figure,data,geodata) {
     // 	.attr("clip-path","url(#clip)");
 
     var ylabel = canvas.append("text")
-	.text("Flux")
+	.text("Caloric Balance")
 	.attr("class","axes-text")
 	.attr("x",(figwidth-width)/4)
 	.attr("y",figheight/2+30)

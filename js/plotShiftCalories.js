@@ -322,14 +322,14 @@ function plotShift(figure,sortedMag,sortedType,sortedWords,sumTypes,refH,compH,m
 	.text(function(d,i) { 
 	    if (i==0) {
 		// if there are names of the texts, put them here
-		if (Math.abs(refH-compH) < 0.01) { return "How the food phrases of reference and "+shiftCompName+" differ";}
-		else { return d+shiftCompName+" is "+happysad+" than "+"reference ";}
+		if (Math.abs(refH-compH) < 0.01) { return "How the food phrases of the whole US and "+shiftCompName+" differ";}
+		else { return d+shiftCompName+" is "+happysad+" on average:";}
 	    }
 	    else if (i==1) {
-		return "Reference calories " + (d.toFixed(2));
+		return "Average US calories = " + (d.toFixed(2));
 	    }
 	    else {
-		return shiftCompName+" calories " + (d.toFixed(2));
+		return shiftCompName+" calories = " + (d.toFixed(2));
 	    }});
 	// .attr("x",width/2+(figwidth-width)/2)
 	// .attr("y",function(d,i) { return i*20+13 })

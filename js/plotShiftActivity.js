@@ -293,7 +293,7 @@ function plotShiftActivity(figure,sortedMag,sortedType,sortedWords,sumTypes,refH
 	.attr("clip-path","url(#clip)");
 
     var ylabel = canvas.append("text")
-	.text("Food Rank")
+	.text("Activity Rank")
 	.attr("class","axes-text")
 	.attr("x",(figwidth-width)/4)
 	.attr("y",figheight/2+30)
@@ -311,10 +311,10 @@ function plotShiftActivity(figure,sortedMag,sortedType,sortedWords,sumTypes,refH
 	.attr("style", "text-anchor: middle;");
 
     if (compH >= refH) {
-	var happysad = " expends more calories than ";
+	var happysad = " expends more calories ";
     }
     else {
-	var happysad = " expends fewer calories than ";
+	var happysad = " expends fewer calories ";
     }
 
     figure.selectAll("p.sumtext")
@@ -322,14 +322,14 @@ function plotShiftActivity(figure,sortedMag,sortedType,sortedWords,sumTypes,refH
 	.text(function(d,i) { 
 	    if (i==0) {
 		// if there are names of the texts, put them here
-		if (Math.abs(refH-compH) < 0.01) { return "How the activity phrases of reference and "+shiftCompName+" differ";}
-		else { return d+shiftCompName+happysad+"reference ";}
+		if (Math.abs(refH-compH) < 0.01) { return "How the activity phrases of the whole US and "+shiftCompName+" differ";}
+		else { return d+shiftCompName+happysad+" on average: ";}
 	    }
 	    else if (i==1) {
-		return "Reference caloric expenditure " + (d.toFixed(2));
+		return "Average US caloric expenditure = " + (d.toFixed(2));
 	    }
 	    else {
-		return shiftCompName+" caloric expenditure " + (d.toFixed(2));
+		return shiftCompName+" caloric expenditure = " + (d.toFixed(2));
 	    }});
 	// .attr("x",width/2+(figwidth-width)/2)
 	// .attr("y",function(d,i) { return i*20+13 })
