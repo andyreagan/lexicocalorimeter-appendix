@@ -319,11 +319,11 @@ function plotShiftActivity(figure,sortedMag,sortedType,sortedWords,sumTypes,refH
 
     figure.selectAll("p.sumtext")
 	.data(["Why ",refH,compH])
-	.text(function(d,i) { 
+	.html(function(d,i) { 
 	    if (i==0) {
 		// if there are names of the texts, put them here
-		if (Math.abs(refH-compH) < 0.01) { return "How the activity phrases of the whole US and "+shiftCompName+" differ";}
-		else { return d+shiftCompName+happysad+" on average: ";}
+		if (Math.abs(refH-compH) < 0.01) { return "How the activity phrases of the whole US and "+shiftCompName+" <b>differ</b>";}
+		else { return d+"<b>"+shiftCompName+happysad+"</b> on average: ";}
 	    }
 	    else if (i==1) {
 		return "Average US caloric expenditure = " + (d.toFixed(2));

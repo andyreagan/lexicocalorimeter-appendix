@@ -100,6 +100,7 @@ function drawMap(figure,data) {
 	    "text-anchor": "middle",
 	    "dominant-baseline": "middle",
 	})
+	.attr("class","statetext")
 	.text(function(d,i) { return d.properties.abbr; } )
     	.on("mouseover",state_hover)
         .on("mouseout",state_unhover);

@@ -127,4 +127,14 @@ p.sumtext {
     margin-bottom: 0;
 }
 
+p.sumtext.top {
+    color: #282828;
+}
 
+p.sumtext.bottom {
+    color: #585858;    
+}
+
+text.statetext {
+    pointer-events: none;
+}

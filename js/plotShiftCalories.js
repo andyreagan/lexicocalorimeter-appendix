@@ -311,12 +311,10 @@ function plotShift(figure,sortedMag,sortedType,sortedWords,sumTypes,refH,compH,m
 	.attr("style", "text-anchor: middle;");
 
     if (compH >= refH) {
-	var happysad = "<em>more caloric</em>";
-	// var happysad = "more caloric";
+	var happysad = "more caloric";
     }
     else { 
-	var happysad = "<em>less caloric</em>";
-	// var happysad = "less caloric";
+	var happysad = "less caloric";
     }
 
     figure.selectAll("p.sumtext")
@@ -325,16 +323,16 @@ function plotShift(figure,sortedMag,sortedType,sortedWords,sumTypes,refH,compH,m
 	    if (i==0) {
 		// if there are names of the texts, put them here
 		// if (Math.abs(refH-compH) < 0.01) { return "How the food phrases of the whole US and "+shiftCompName+" differ";}
-		if (Math.abs(refH-compH) < 0.01) { return "How the food phrases of the whole US and "+shiftCompName+" <em>differ</em>";}
-		else { return d+"<strong>"+shiftCompName+"</strong>"+" is "+happysad+" on average:";}
+		if (Math.abs(refH-compH) < 0.01) { return "How the food phrases of the whole US and "+shiftCompName+" <b>differ</b>";}
+		else { return d+"<b>"+shiftCompName+" is "+happysad+"</b> on average:";}
 		// else { return d+shiftCompName+" is "+happysad+" on average:";}
 	    }
 	    else if (i==1) {
-		return "<strong>Average US</strong> calories = " + (d.toFixed(2));
+		return "Average US calories = " + (d.toFixed(2));
 		return "Average US calories = " + (d.toFixed(2));
 	    }
 	    else {
-		return "<strong>"+shiftCompName+"</strong>"+" calories = " + (d.toFixed(2));
+		return shiftCompName+" calories = " + (d.toFixed(2));
 		// return shiftCompName+" calories = " + (d.toFixed(2));
 	    }});
 	// .attr("x",width/2+(figwidth-width)/2)
