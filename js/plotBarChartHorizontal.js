@@ -152,14 +152,17 @@ function plotBarChart(figure,data,geodata) {
 
     var qcolor = d3.scale.quantize()
 	.domain(d3.extent(data))
-	.range([0,1,2,3,4,5,6,7,8]);
+	// .range([0,1,2,3,4,5,6,7,8]);
+	.range(["#f7fcf5","#e5f5e0","#c7e9c0","#a1d99b","#74c476","#41ab5d","#238b45","#006d2c","#00441b",]);
 
     axes.selectAll("rect.staterect")
 	.data(sortedStates)
 	.enter()
 	.append("rect")
 	// .attr("fill", function(d,i) { if (data[3]>0) {return color(data[3]);} else {return color(d[3]); } })
-	.attr("class", function(d,i) { return d[2][0]+d[2].split(" ")[d[2].split(" ").length-1]+" staterect "+"q9-"+qcolor(d[3]); })
+    // .attr("class", function(d,i) { return d[2][0]+d[2].split(" ")[d[2].split(" ").length-1]+" staterect "+"q9-"+qcolor(d[3]); })
+	.attr("class", function(d,i) { return d[2][0]+d[2].split(" ")[d[2].split(" ").length-1]+" staterect "; })
+    	.attr("fill",function(d,i) { return qcolor(d[3]); })
 	.attr("y", function(d,i) { if (d[3]>0) { return figcenter; } else { return y(d[3]); } })
 	.attr("x", function(d,i) { return x(i+1); })
 	.style({'opacity':'0.7','stroke-width':'1','stroke':'rgb(0,0,0)'})
@@ -171,6 +174,7 @@ function plotBarChart(figure,data,geodata) {
 	})
 	.on('mouseout', function(d){
             var rectSelection = d3.select(this).style({opacity:'0.7'});
+	    state_unhover(d,i);
 	});
 
     axes.selectAll("text.statetext")
@@ -228,7 +232,7 @@ function plotBarChart(figure,data,geodata) {
 
 	// d3.select(this).attr("fill","red");
 	// console.log("."+d[2][0]+d[2].split(" ")[d[2].split(" ").length-1]);
-	// d3.selectAll("."+d[2][0]+d[2].split(" ")[d[2].split(" ").length-1]).attr("fill","red");
+	d3.selectAll("."+d[2][0]+d[2].split(" ")[d[2].split(" ").length-1]).attr("fill","red");
 	
 	shiftComp = sortedStates[i][1];
 	shiftCompName = sortedStates[i][2];
@@ -250,6 +254,11 @@ function plotBarChart(figure,data,geodata) {
 			  shiftObj2.sumTypes,
 			  shiftObj2.refH,
 			  shiftObj2.compH,450);
+    }
+
+    function state_unhover(d,i) { 
+	var statecolor = qcolor(d[3]);
+	d3.selectAll("."+d[2][0]+d[2].split(" ")[d[2].split(" ").length-1]).attr("fill",function(d,i) { return statecolor; });
     }
 };
 

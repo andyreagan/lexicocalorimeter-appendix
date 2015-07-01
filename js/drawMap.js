@@ -72,13 +72,16 @@ function drawMap(figure,data,sorted_json) {
 
     var qcolor = d3.scale.quantize()
 	.domain(d3.extent(data))
-	.range([0,1,2,3,4,5,6,7,8]);
-
+	// .range([0,1,2,3,4,5,6,7,8]);
+	.range(["#f7fcf5","#e5f5e0","#c7e9c0","#a1d99b","#74c476","#41ab5d","#238b45","#006d2c","#00441b",]);
+    
     states.enter()
 	.append("path")
 	.attr("d", function(d,i) { return path(d.geometry); } )
 	.attr("id", function(d,i) { return d.properties.name; } )
-	.attr("class",function(d,i) { return "state map "+d.properties.name[0]+d.properties.name.split(" ")[d.properties.name.split(" ").length-1]+" q9-"+qcolor(data[i]); } )
+    // .attr("class",function(d,i) { return "state map "+d.properties.name[0]+d.properties.name.split(" ")[d.properties.name.split(" ").length-1]+" q9-"+qcolor(data[i]); } )
+	.attr("class",function(d,i) { return "state map "+d.properties.name[0]+d.properties.name.split(" ")[d.properties.name.split(" ").length-1]; } )
+	.attr("fill",function(d,i) { return qcolor(data[i]); })
         //.on("mousedown",state_clicked)
         //.on("mouseover",function(d,i) { console.log(d.properties.name); } );
 	.on("mouseover",state_hover)
@@ -138,8 +141,10 @@ function drawMap(figure,data,sorted_json) {
     function state_hover(d,i) {
 	console.log("from the map:");
 	console.log(i);
+
+	d3.selectAll("."+d.properties.name[0]+d.properties.name.split(" ")[d.properties.name.split(" ").length-1]).attr("fill","red");
 	
-	d3.select(this).attr("fill","red");
+	// d3.select(this).attr("fill","red");
 	
 	shiftComp = i;
 	shiftCompName = d.properties.name;
@@ -175,9 +180,15 @@ function drawMap(figure,data,sorted_json) {
 	// console.log(".state.list."+allData[i].name[0]+allData[i].name.split(" ")[allData[i].name.split(" ").length-1]);
 	// d3.selectAll(".state.list."+allData[i].name[0]+allData[i].name.split(" ")[allData[i].name.split(" ").length-1])
 	//     .attr("fill",color(allData[i].avhapps));
+
+	// console.log(qcolor(data[i]))
+	var statecolor = qcolor(data[i]);
+	console.log(statecolor);
+	d3.selectAll("."+d.properties.name[0]+d.properties.name.split(" ")[d.properties.name.split(" ").length-1]).attr("fill",function(d,i) { return statecolor; });
+	
 	// d3.select(this)
         //  .attr("fill", function() {
-    	//      return color(data[i]);
+    	//      return qcolor(data[i]);
     	// });
     }
 

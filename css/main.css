@@ -117,9 +117,9 @@ table {
 .q9-7 { fill: #006d2c;}
 .q9-8 { fill: #00441b;}
 
-path.state:hover { fill: red; }
+/* path.state:hover { fill: red; } */
 
-rect.staterect:hover { fill: red; }
+/* rect.staterect:hover { fill: red; } */
 
 .offset-0 {
     padding-left: 0;
