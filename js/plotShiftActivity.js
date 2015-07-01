@@ -7,18 +7,17 @@ function plotShiftActivity(figure,sortedMag,sortedType,sortedWords,sumTypes,refH
        for each word
 
     */
-    var margin = {top: 0, right: 0, bottom: 0, left: 0};
-    var figwidth = parseInt(d3.select('#shift01').style('width')) - margin.left - margin.right;
-    var figheight = max_height - margin.top - margin.bottom;
-    var width = .873*figwidth;
-    var height = .8875*figheight;
+    var margin = {top: 0, right: 0, bottom: 35, left: 45};
+    var figwidth = parseInt(d3.select('#shift01').style('width'));
+    var figheight = max_height;
+    var width = figwidth - margin.left - margin.right;
+    var height = figheight - margin.top - margin.bottom;;
     var figcenter = width/2;
     var yHeight = 90;
     var clipHeight = yHeight-1;
     var barHeight = yHeight-6;;
     var numWords = num_shift_words;
     var shiftTypeSelect = false;
-    var leftOffsetStatic = 0.125*figwidth;
     
     // remove an old figure if it exists
     figure.select(".canvas").remove();
@@ -50,8 +49,8 @@ function plotShiftActivity(figure,sortedMag,sortedType,sortedWords,sumTypes,refH
 
     // create the axes themselves
     var axes = canvas.append("g")
-	.attr("transform", "translate(" + (0.125 * figwidth) + "," +
-	      ((1 - 0.215 - 0.775) * figheight) + ")")
+	.attr("transform", "translate(" + (margin.left) + "," +
+	      (margin.top) + ")")
 	.attr("width", width)
 	.attr("height", height)
 	.attr("class", "main")
@@ -292,23 +291,29 @@ function plotShiftActivity(figure,sortedMag,sortedType,sortedWords,sumTypes,refH
     axes = axes.append("g")
 	.attr("clip-path","url(#clip)");
 
-    var ylabel = canvas.append("text")
+
+        var ylabel = canvas.append("text")
 	.text("Activity Rank")
 	.attr("class","axes-text")
-	.attr("x",(figwidth-width)/4)
-	.attr("y",figheight/2+30)
+	.attr("x",0)
+	.attr("y",2*figheight/4)
 	.attr("font-size", "16.0px")
 	.attr("fill", "#000000")
-	.attr("transform", "rotate(-90.0," + (figwidth-width)/4 + "," + (figheight/2+30) + ")");
-
+	.attr("transform", "rotate(-90.0 " + (0) + "," + (2*figheight/4) + ")")
+    	.style({"text-anchor": "middle",
+		"dominant-baseline": "hanging",
+	       });
+    
     var xlabel = canvas.append("text")
 	.text("Per activity phrase caloric expenditure shift")
 	.attr("class","axes-text")
-	.attr("x",width/2+(figwidth-width)/2)
-	.attr("y",3*(figheight-height)/4+height)
+	.attr("x",figcenter+margin.left)
+	.attr("y",figheight)
 	.attr("font-size", "16.0px")
 	.attr("fill", "#000000")
-	.attr("style", "text-anchor: middle;");
+    	.style({"text-anchor": "middle",
+		"dominant-baseline": "ideographic",
+	       });
 
     if (compH >= refH) {
 	var happysad = " expends more calories ";
@@ -449,8 +454,8 @@ function plotShiftActivity(figure,sortedMag,sortedType,sortedWords,sumTypes,refH
     d3.select(window).on("resize.shiftplot",resizeshift);
     
     function resizeshift() {
-	figwidth = parseInt(d3.select("#shift01").style('width')) - margin.left - margin.right,
-	width = .775*figwidth
+	figwidth = parseInt(d3.select("#shift01").style('width'));
+	width = figwidth-margin.left-margin.right;
 	figcenter = width/2;
 
 	canvas.attr("width",figwidth);
@@ -470,7 +475,7 @@ function plotShiftActivity(figure,sortedMag,sortedType,sortedWords,sumTypes,refH
 	clip.attr("width",width);
 
 	// get the x label
-	xlabel.attr("x",(leftOffsetStatic+width/2));
+	xlabel.attr("x",(width/2+margin.left));
 
 	// the andy reagan credit
 	credit.attr("x",width-7);

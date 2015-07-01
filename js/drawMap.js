@@ -25,8 +25,8 @@ function drawMap(figure,data,sorted_json) {
     // these work for col-sm-5
     // .center([-87,38])
     // .scale(1650);
-    	.center([-83,37])
-    	.scale(1360);
+    	.center([-84.7,36.6])
+    	.scale(1560);
 
     //Define path generator
     var path = d3.geo.path()
