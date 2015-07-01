@@ -440,8 +440,6 @@ function plotShiftActivity(figure,sortedMag,sortedType,sortedWords,sumTypes,refH
 	figure.selectAll(".tick line").style({'stroke':'black'});
     };
 
-    console.log(leftOffsetStatic+width);
-
     var credit = axes.insert("text","rect")
         .attr("class","credit")
 	.text("by Andy Reagan")

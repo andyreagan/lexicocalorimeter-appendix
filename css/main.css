@@ -116,11 +116,13 @@ table {
 .q9-6 { fill: #238b45;}
 .q9-7 { fill: #006d2c;}
 .q9-8 { fill: #00441b;}
+
 path.state:hover { fill: red; }
+
+rect.staterect:hover { fill: red; }
 
 .offset-0 {
     padding-left: 0;
-    /* padding-right: 0; */
 }
 
 p.sumtext {

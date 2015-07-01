@@ -135,10 +135,12 @@ function drawMap(figure,data,sorted_json) {
 	}
     }
 
-    function state_hover(d,i) { 
-	// next line verifies that the data and json line up
-	// console.log(d.properties.name); console.log(allData[i].name.split(" ")[allData[i].name.split(" ").length-1]); 
-	// d3.select(this).attr("fill","red");
+    function state_hover(d,i) {
+	console.log("from the map:");
+	console.log(i);
+	
+	d3.select(this).attr("fill","red");
+	
 	shiftComp = i;
 	shiftCompName = d.properties.name;
 	// if (shiftRef !== shiftComp) {

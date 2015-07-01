@@ -159,12 +159,12 @@ function plotBarChart(figure,data,geodata) {
 	.enter()
 	.append("rect")
 	// .attr("fill", function(d,i) { if (data[3]>0) {return color(data[3]);} else {return color(d[3]); } })
-	.attr("class", function(d,i) { return d[2]+" staterect "+"q9-"+qcolor(d[3]); })
+	.attr("class", function(d,i) { return d[2][0]+d[2].split(" ")[d[2].split(" ").length-1]+" staterect "+"q9-"+qcolor(d[3]); })
 	.attr("y", function(d,i) { if (d[3]>0) { return figcenter; } else { return y(d[3]); } })
 	.attr("x", function(d,i) { return x(i+1); })
 	.style({'opacity':'0.7','stroke-width':'1','stroke':'rgb(0,0,0)'})
 	.attr("width",function(d,i) { return barHeight; } )
-	.attr("height",function(d,i) { if (d[3]>0) {return y(d[3])-figcenter;} else {return figcenter-y(d[3]); } } )
+	.attr("height",function(d,i) { if (d[3]>0) {return d3.max([y(d[3])-figcenter,0.01]);} else {return d3.max([figcenter-y(d[3]),0.01]); } } )
 	.on('mouseover', function(d,i){
             var rectSelection = d3.select(this).style({opacity:'1.0'});
 	    state_hover(d,i);
@@ -210,7 +210,7 @@ function plotBarChart(figure,data,geodata) {
     // 	clip.attr("width",width);
 
     // 	// get the x label
-    // 	xlabel.attr("x",(leftOffsetStatic+width/2));
+    // 	xlabel.attr("x",(margin.left+width/2));
 
     // 	// the andy reagan credit
     // 	credit.attr("x",width-7);
@@ -223,13 +223,15 @@ function plotBarChart(figure,data,geodata) {
     // }
 
     function state_hover(d,i) { 
-	// next line verifies that the data and json line up
-	// console.log(d.properties.name); console.log(allData[i].name.split(" ")[allData[i].name.split(" ").length-1]); 
+	console.log("from the bar chart:");
+	console.log(sortedStates[i]);
+
 	// d3.select(this).attr("fill","red");
-	console.log(i);
+	// console.log("."+d[2][0]+d[2].split(" ")[d[2].split(" ").length-1]);
+	// d3.selectAll("."+d[2][0]+d[2].split(" ")[d[2].split(" ").length-1]).attr("fill","red");
+	
 	shiftComp = sortedStates[i][1];
 	shiftCompName = sortedStates[i][2];
-	console.log(shiftCompName);
 	// if (shiftRef !== shiftComp) {
 	shiftObj = shift(allUSfood,stateFood.map(function(d) { return parseFloat(d[shiftComp]); }),foodCals,foodNames);
 
