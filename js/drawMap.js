@@ -1,4 +1,4 @@
-function drawMap(figure,data) {
+function drawMap(figure,data,sorted_json) {
     /* 
        plot the state map!
 
@@ -65,15 +65,15 @@ function drawMap(figure,data) {
 
     //Bind data and create one path per GeoJSON feature
     var states = canvas.selectAll("path")
-	.data(stateFeatures);
+	.data(sorted_json);
 
     var state_text = canvas.selectAll("text")
-	.data(stateFeatures);
+	.data(sorted_json);
 
     var qcolor = d3.scale.quantize()
 	.domain(d3.extent(data))
 	.range([0,1,2,3,4,5,6,7,8]);
-    
+
     states.enter()
 	.append("path")
 	.attr("d", function(d,i) { return path(d.geometry); } )

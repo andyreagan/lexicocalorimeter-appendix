@@ -40,7 +40,6 @@ function loadCsv() {
     d3.text("data/caloric_balance06292015.csv", function (text) {
         var tmp = text.split("\n").slice(1,50);
 	stateFlux = tmp.map(function(d) { return [d.split(",")[0],parseFloat(d.split(",")[1])]; });
-        // stateFlux = tmp.map(function(d) { return parseFloat(d.split(",")[1]); });
         if (!--csvLoadsRemaining) initializePlotPlot();
     });
 };
@@ -49,20 +48,23 @@ function initializePlotPlot() {
     // line up the state flux with the map
     //
     // first, create a json so I can lookup the values for each state
-    state_flux_json = {};
+    state_json_json = {};
     for (var i=0; i<49; i++) {
-	state_flux_json[stateFlux[i][0]] = stateFlux[i][1];
+	state_json_json[stateFeatures[i].properties.name] = stateFeatures[i];
     }
     // save the sorted values in this
-    sorted_state_flux = Array(49);
+    sorted_state_json = Array(49);
     // loop through the map titles, and add them in that order to the above array
     for (var i=0; i<49; i++) {
-	sorted_state_flux[i] = state_flux_json[stateFeatures[i].properties.name];
+	sorted_state_json[i] = state_json_json[stateFlux[i][0]];
     }
+
+    // make this the new one
+    // stateFeatures = sorted_state_json;
     
-    plotBarChart(d3.select("#bars01"),sorted_state_flux,stateFeatures);
+    plotBarChart(d3.select("#bars01"),stateFlux.map(function(d) { return d[1]; }),sorted_state_json);
     // drap the map
-    drawMap(d3.select("#map01"),sorted_state_flux);
+    drawMap(d3.select("#map01"),stateFlux.map(function(d) { return d[1]; }),sorted_state_json);
     allUSfood = stateFood.map(function(d) { return d3.sum(d); });
     allUSact = stateAct.map(function(d) { return d3.sum(d); });
 
