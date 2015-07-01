@@ -3,6 +3,9 @@ var num_shift_words = 24;
 var rectHeight = 11;
 var sumRectHeight = 15;
 
+var state_encoder = d3.urllib.encoder().varname("ID");
+var state_decoder = d3.urllib.decoder().varname("ID").varresult(0);
+
 function initializePlot() {
     loadCsv();
 }
@@ -68,7 +71,7 @@ function initializePlotPlot() {
     allUSfood = stateFood.map(function(d) { return d3.sum(d); });
     allUSact = stateAct.map(function(d) { return d3.sum(d); });
 
-    i = 2;
+    i = state_decoder().cached;
     shiftComp = sortedStates[i][1];
     shiftCompName = sortedStates[i][2];
     console.log(shiftCompName);

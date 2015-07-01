@@ -23,6 +23,7 @@ function plotShift(figure,sortedMag,sortedType,sortedWords,sumTypes,refH,compH,m
     figure.select(".canvas").remove();
 
     var canvas = figure.append("svg")
+    	.attr("id","foodshift")
 	.attr("width",figwidth)
 	.attr("height",figheight)
 	.attr("class","canvas")

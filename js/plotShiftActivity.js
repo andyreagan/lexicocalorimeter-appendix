@@ -23,6 +23,7 @@ function plotShiftActivity(figure,sortedMag,sortedType,sortedWords,sumTypes,refH
     figure.select(".canvas").remove();
 
     var canvas = figure.append("svg")
+        .attr("id","activityshift")
 	.attr("width",figwidth)
 	.attr("height",figheight)
 	.attr("class","canvas")
