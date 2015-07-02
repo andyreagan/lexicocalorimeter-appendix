@@ -128,14 +128,22 @@ table {
 p.sumtext {
     margin-bottom: 0;
 }
-
 p.sumtext.top {
     color: #282828;
 }
-
 p.sumtext.bottom {
     color: #585858;    
 }
+
+/* text.titletext { */
+/* } */
+
+/* text.titletext.two { */
+/*     color: #A8A8A8 !important; */
+/* } */
+/* text.titletext.three { */
+/*     color: #282828; */
+/* } */
 
 text.statetext {
     pointer-events: none;

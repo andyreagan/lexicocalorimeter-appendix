@@ -53,8 +53,10 @@ function plotBarChart(figure,data,geodata) {
     // linear scale function
     var absDataMax = d3.max([d3.max(data),-d3.min(data)]);
     var y =  d3.scale.linear()
-    	.domain([-absDataMax,absDataMax])
+    	// .domain([-absDataMax,absDataMax])
+        .domain([absDataMax,-absDataMax])
 	.range([5,height-10]);
+    
 
     // // zoom object for the axes
     // var zoom = d3.behavior.zoom()
@@ -83,7 +85,7 @@ function plotBarChart(figure,data,geodata) {
     // axes creation functions
     var create_xAxis = function() {
 	return d3.svg.axis()
-	    .ticks(4)
+	    .ticks(20)
 	    .scale(x)
 	    .orient("bottom"); }
 
@@ -163,11 +165,11 @@ function plotBarChart(figure,data,geodata) {
     // .attr("class", function(d,i) { return d[2][0]+d[2].split(" ")[d[2].split(" ").length-1]+" staterect "+"q9-"+qcolor(d[3]); })
 	.attr("class", function(d,i) { return d[2][0]+d[2].split(" ")[d[2].split(" ").length-1]+" staterect "; })
     	.attr("fill",function(d,i) { return qcolor(d[3]); })
-	.attr("y", function(d,i) { if (d[3]>0) { return figcenter; } else { return y(d[3]); } })
+	.attr("y", function(d,i) { if (d[3]<0) { return figcenter; } else { return y(d[3]); } })
 	.attr("x", function(d,i) { return x(i+1); })
 	.style({'opacity':'0.7','stroke-width':'1','stroke':'rgb(0,0,0)'})
 	.attr("width",function(d,i) { return barHeight; } )
-	.attr("height",function(d,i) { if (d[3]>0) {return d3.max([y(d[3])-figcenter,0.01]);} else {return d3.max([figcenter-y(d[3]),0.01]); } } )
+	.attr("height",function(d,i) { if (d[3]<0) {return d3.max([y(d[3])-figcenter,0.01]);} else {return d3.max([figcenter-y(d[3]),0.01]); } } )
 	.on('mouseover', function(d,i){
             var rectSelection = d3.select(this).style({opacity:'1.0'});
 	    state_hover(d,i);
@@ -181,14 +183,17 @@ function plotBarChart(figure,data,geodata) {
 	.data(sortedStates)
 	.enter()
 	.append("text")
-	.attr("class", function(d,i) { return d[2]+" statetext"; })
-        .attr("y", function(d,i) { if (d[3]>0) { return figcenter-4; } else { return figcenter+4; } })
-	.attr("x",function(d,i) { return x(i+1)+11; } )
-	.attr("transform", function(d,i) { return "rotate(-50 "+(x(i+1)+11)+","+(figcenter-Math.abs(d[3])/d[3]*7)+")"; })
+	.attr("class", function(d,i) { return d[2]+""; })
+        .attr("y", function(d,i) { if (d[3]<0) { return figcenter-6; } else { return figcenter+6; } })
+	.attr("x",function(d,i) { return x(i+1)+3; } )
+	.attr("transform", function(d,i) { return "rotate(46 "+(x(i+1)+3)+","+(figcenter+Math.abs(d[3])/d[3]*6)+")"; })
 	.style({"text-anchor": function(d,i) { if (d[3]>0) { return "start";} else { return "end";}},
 		"font-size": textSize,
 	       })
-        .text(function(d,i) { return d[2]; });
+        .text(function(d,i) { return (i+1)+". "+d[2]; })
+    	.on('mouseover', function(d,i){
+	    state_hover(d,i);
+	});
 
     // d3.select(window).on("resize.shiftplot",resizeshift);
     
@@ -229,6 +234,12 @@ function plotBarChart(figure,data,geodata) {
     function state_hover(d,i) { 
 	console.log("from the bar chart:");
 	console.log(sortedStates[i]);
+	
+	axes.selectAll("rect.staterect")
+    	    .attr("fill",function(d,i) { return qcolor(d[3]); });
+
+	d3.selectAll("path.state")
+	    .attr("fill",function(d,i) { return qcolor(data[i]); });
 
 	// d3.select(this).attr("fill","red");
 	// console.log("."+d[2][0]+d[2].split(" ")[d[2].split(" ").length-1]);
@@ -236,29 +247,76 @@ function plotBarChart(figure,data,geodata) {
 	
 	shiftComp = sortedStates[i][1];
 	shiftCompName = sortedStates[i][2];
-	// if (shiftRef !== shiftComp) {
-	shiftObj = shift(allUSfood,stateFood.map(function(d) { return parseFloat(d[shiftComp]); }),foodCals,foodNames);
 
-	plotShift(d3.select('#shift01'),shiftObj.sortedMag.slice(0,200),
-		  shiftObj.sortedType.slice(0,200),
-		  shiftObj.sortedWords.slice(0,200),
-		  shiftObj.sumTypes,
-		  shiftObj.refH,
-		  shiftObj.compH,450);
+	if (shiftCompName === "District of Columbia") {
+	    shiftCompName = "DC";
+	}
+	console.log(shiftCompName);
+	
+	hedotools.shifter._refF(allUSfood);
+	hedotools.shifter._compF(stateFood.map(function(d) { return parseFloat(d[shiftComp]); }));
+	hedotools.shifter.shifter();
+	var refH = hedotools.shifter._refH();
+	var compH = hedotools.shifter._compH();
+	if (compH >= refH) {
+	    var happysad = "more caloric";
+	}
+	else { 
+	    var happysad = "less caloric";
+	}
+	var sumtextarray = ["","",""];
+	sumtextarray[0] = function() {
+	    if (Math.abs(refH-compH) < 0.01) {
+		return "How the food phrases of the whole US and "+shiftCompName+" differ";
+	    }
+	    else {
+		return "Why "+shiftCompName+" is "+happysad+" on average:";
+	    }
+	}();
+	sumtextarray[1] = function() {
+	    return "Average US calories = " + (refH.toFixed(2));
+	}();
+	sumtextarray[2] = function() {
+	    return shiftCompName+" calories = " + (compH.toFixed(2));
+	}();
+	
+	hedotools.shifter.setText(sumtextarray);
+	hedotools.shifter.plot();
 
-	shiftObj2 = shift(allUSact,stateAct.map(function(d) { return parseFloat(d[shiftComp]); }),actCals,actNames);
-
-	plotShiftActivity(d3.select('#shift02'),shiftObj2.sortedMag.slice(0,200),
-			  shiftObj2.sortedType.slice(0,200),
-			  shiftObj2.sortedWords.slice(0,200),
-			  shiftObj2.sumTypes,
-			  shiftObj2.refH,
-			  shiftObj2.compH,450);
+	hedotools.shifterTwo._refF(allUSact);
+	hedotools.shifterTwo._compF(stateAct.map(function(d) { return parseFloat(d[shiftComp]); }));
+	hedotools.shifterTwo.shifter();
+	var refH = hedotools.shifterTwo._refH();
+	var compH = hedotools.shifterTwo._compH();
+	if (compH >= refH) {
+	    var happysad = " expends more calories ";
+	}
+	else {
+	    var happysad = " expends fewer calories ";
+	}
+	var sumtextarray = ["","",""];
+	sumtextarray[0] = function() {
+	    if (Math.abs(refH-compH) < 0.01) {
+		return "How the activity phrases of the whole US and "+shiftCompName+" differ";
+	    }
+	    else {
+		return "Why "+shiftCompName+" is "+happysad+" on average:";
+	    }
+	}();
+	sumtextarray[1] = function() {
+	    return "Average US caloric expenditure = " + (refH.toFixed(2));
+	}();
+	sumtextarray[2] = function() {
+	    return shiftCompName+" caloric expenditure = " + (compH.toFixed(2));
+	}();
+	// hedotools.shifterTwo.setWidth(modalwidth);
+	hedotools.shifterTwo.setText(sumtextarray);
+	hedotools.shifterTwo.plot();
     }
 
     function state_unhover(d,i) { 
-	var statecolor = qcolor(d[3]);
-	d3.selectAll("."+d[2][0]+d[2].split(" ")[d[2].split(" ").length-1]).attr("fill",function(d,i) { return statecolor; });
+	// var statecolor = qcolor(d[3]);
+	// d3.selectAll("."+d[2][0]+d[2].split(" ")[d[2].split(" ").length-1]).attr("fill",function(d,i) { return statecolor; });
     }
 };
 

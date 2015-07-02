@@ -142,35 +142,83 @@ function drawMap(figure,data,sorted_json) {
 	console.log("from the map:");
 	console.log(i);
 
+	d3.selectAll("rect.staterect")
+    	    .attr("fill",function(d,i) { return qcolor(d[3]); });
+
+	canvas.selectAll("path.state")
+	    .attr("fill",function(d,i) { return qcolor(data[i]); });
+
 	d3.selectAll("."+d.properties.name[0]+d.properties.name.split(" ")[d.properties.name.split(" ").length-1]).attr("fill","red");
 	
 	// d3.select(this).attr("fill","red");
 	
 	shiftComp = i;
 	shiftCompName = d.properties.name;
-	// if (shiftRef !== shiftComp) {
-	shiftObj = shift(allUSfood,stateFood.map(function(d) { return parseFloat(d[i]); }),foodCals,foodNames);
 
-	plotShift(d3.select('#shift01'),shiftObj.sortedMag.slice(0,200),
-		  shiftObj.sortedType.slice(0,200),
-		  shiftObj.sortedWords.slice(0,200),
-		  shiftObj.sumTypes,
-		  shiftObj.refH,
-		  shiftObj.compH,shift_height);
+		if (shiftCompName === "District of Columbia") {
+	    shiftCompName = "DC";
+	}
+	console.log(shiftCompName);
+	
+	hedotools.shifter._refF(allUSfood);
+	hedotools.shifter._compF(stateFood.map(function(d) { return parseFloat(d[shiftComp]); }));
+	hedotools.shifter.shifter();
+	var refH = hedotools.shifter._refH();
+	var compH = hedotools.shifter._compH();
+	if (compH >= refH) {
+	    var happysad = "more caloric";
+	}
+	else { 
+	    var happysad = "less caloric";
+	}
+	var sumtextarray = ["","",""];
+	sumtextarray[0] = function() {
+	    if (Math.abs(refH-compH) < 0.01) {
+		return "How the food phrases of the whole US and "+shiftCompName+" differ";
+	    }
+	    else {
+		return "Why "+shiftCompName+" is "+happysad+" on average:";
+	    }
+	}();
+	sumtextarray[1] = function() {
+	    return "Average US calories = " + (refH.toFixed(2));
+	}();
+	sumtextarray[2] = function() {
+	    return shiftCompName+" calories = " + (compH.toFixed(2));
+	}();
+	
+	hedotools.shifter.setText(sumtextarray);
+	hedotools.shifter.plot();
 
-	shiftObj2 = shift(allUSact,stateAct.map(function(d) { return parseFloat(d[i]); }),actCals,actNames);
-
-	plotShiftActivity(d3.select('#shift02'),shiftObj2.sortedMag.slice(0,200),
-		  shiftObj2.sortedType.slice(0,200),
-		  shiftObj2.sortedWords.slice(0,200),
-		  shiftObj2.sumTypes,
-		  shiftObj2.refH,
-			  shiftObj2.compH,shift_height);
-	// }
-	// if (shiftRef !== shiftComp) { 
-	//     //console.log("comparison "+allData[shiftComp].name);
-	//     //shift(); 
-	// }
+	hedotools.shifterTwo._refF(allUSact);
+	hedotools.shifterTwo._compF(stateAct.map(function(d) { return parseFloat(d[shiftComp]); }));
+	hedotools.shifterTwo.shifter();
+	var refH = hedotools.shifterTwo._refH();
+	var compH = hedotools.shifterTwo._compH();
+	if (compH >= refH) {
+	    var happysad = " expends more calories ";
+	}
+	else {
+	    var happysad = " expends fewer calories ";
+	}
+	var sumtextarray = ["","",""];
+	sumtextarray[0] = function() {
+	    if (Math.abs(refH-compH) < 0.01) {
+		return "How the activity phrases of the whole US and "+shiftCompName+" differ";
+	    }
+	    else {
+		return "Why "+shiftCompName+" is "+happysad+" on average:";
+	    }
+	}();
+	sumtextarray[1] = function() {
+	    return "Average US caloric expenditure = " + (refH.toFixed(2));
+	}();
+	sumtextarray[2] = function() {
+	    return shiftCompName+" caloric expenditure = " + (compH.toFixed(2));
+	}();
+	// hedotools.shifterTwo.setWidth(modalwidth);
+	hedotools.shifterTwo.setText(sumtextarray);
+	hedotools.shifterTwo.plot();
     }
 
     function state_unhover(d,i) { 
@@ -182,9 +230,9 @@ function drawMap(figure,data,sorted_json) {
 	//     .attr("fill",color(allData[i].avhapps));
 
 	// console.log(qcolor(data[i]))
-	var statecolor = qcolor(data[i]);
-	console.log(statecolor);
-	d3.selectAll("."+d.properties.name[0]+d.properties.name.split(" ")[d.properties.name.split(" ").length-1]).attr("fill",function(d,i) { return statecolor; });
+	// var statecolor = qcolor(data[i]);
+	// console.log(statecolor);
+	// d3.selectAll("."+d.properties.name[0]+d.properties.name.split(" ")[d.properties.name.split(" ").length-1]).attr("fill",function(d,i) { return statecolor; });
 	
 	// d3.select(this)
         //  .attr("fill", function() {

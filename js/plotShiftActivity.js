@@ -315,7 +315,7 @@ function plotShiftActivity(figure,sortedMag,sortedType,sortedWords,sumTypes,refH
     	.style({"text-anchor": "middle",
 		"dominant-baseline": "ideographic",
 	       });
-
+    
     if (compH >= refH) {
 	var happysad = " expends more calories ";
     }

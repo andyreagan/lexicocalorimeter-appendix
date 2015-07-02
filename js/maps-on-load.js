@@ -74,25 +74,85 @@ function initializePlotPlot() {
     i = state_decoder().cached;
     shiftComp = sortedStates[i][1];
     shiftCompName = sortedStates[i][2];
+
+    d3.selectAll("."+shiftCompName[0]+shiftCompName.split(" ")[shiftCompName.split(" ").length-1]).attr("fill","red");
+    
+    if (shiftCompName === "District of Columbia") {
+	shiftCompName = "DC";
+    }
     console.log(shiftCompName);
-    // if (shiftRef !== shiftComp) {
-    shiftObj = shift(allUSfood,stateFood.map(function(d) { return parseFloat(d[shiftComp]); }),foodCals,foodNames);
+    
+    hedotools.shifter.setfigure(d3.select("#shift01"));
+    hedotools.shifter._refF(allUSfood);
+    hedotools.shifter._compF(stateFood.map(function(d) { return parseFloat(d[shiftComp]); }));
+    hedotools.shifter._words(foodNames);
+    hedotools.shifter._lens(foodCals);
+    hedotools.shifter.setTextBold(1);
+    hedotools.shifter.shifter();
+    var refH = hedotools.shifter._refH();
+    var compH = hedotools.shifter._compH();
+    if (compH >= refH) {
+	var happysad = "more caloric";
+    }
+    else { 
+	var happysad = "less caloric";
+    }
+    var sumtextarray = ["","",""];
+    sumtextarray[0] = function() {
+	if (Math.abs(refH-compH) < 0.01) {
+	    return "How the food phrases of the whole US and "+shiftCompName+" differ";
+	}
+	else {
+	    return "Why "+shiftCompName+" is "+happysad+" on average:";
+	}
+    }();
+    sumtextarray[1] = function() {
+	return "Average US calories = " + (refH.toFixed(2));
+    }();
+    sumtextarray[2] = function() {
+		return shiftCompName+" calories = " + (compH.toFixed(2));
+    }();
+	
+    hedotools.shifter.setText(sumtextarray);
+    console.log(sumtextarray);
+    hedotools.shifter._xlabel_text("Per food phrase caloric shift");
+    hedotools.shifter._ylabel_text("Food rank");
+    hedotools.shifter.plot();
 
-    plotShift(d3.select('#shift01'),shiftObj.sortedMag.slice(0,200),
-	      shiftObj.sortedType.slice(0,200),
-	      shiftObj.sortedWords.slice(0,200),
-	      shiftObj.sumTypes,
-	      shiftObj.refH,
-	      shiftObj.compH,shift_height);
-
-    shiftObj2 = shift(allUSact,stateAct.map(function(d) { return parseFloat(d[shiftComp]); }),actCals,actNames);
-
-    plotShiftActivity(d3.select('#shift02'),shiftObj2.sortedMag.slice(0,200),
-		      shiftObj2.sortedType.slice(0,200),
-		      shiftObj2.sortedWords.slice(0,200),
-		      shiftObj2.sumTypes,
-		      shiftObj2.refH,
-		      shiftObj2.compH,shift_height);
+    hedotools.shifterTwo._refF(allUSact);
+    hedotools.shifterTwo._compF(stateAct.map(function(d) { return parseFloat(d[shiftComp]); }));
+    hedotools.shifterTwo._words(actNames);
+    hedotools.shifterTwo._lens(actCals);
+    hedotools.shifterTwo.shifter();
+    var refH = hedotools.shifterTwo._refH();
+    var compH = hedotools.shifterTwo._compH();
+    if (compH >= refH) {
+	var happysad = " expends more calories ";
+    }
+    else {
+	var happysad = " expends fewer calories ";
+    }
+    var sumtextarray = ["","",""];
+    sumtextarray[0] = function() {
+	if (Math.abs(refH-compH) < 0.01) {
+	    return "How the activity phrases of the whole US and "+shiftCompName+" differ";
+	}
+	else {
+	    return "Why "+shiftCompName+" is "+happysad+" on average:";
+	}
+    }();
+    sumtextarray[1] = function() {
+	return "Average US caloric expenditure = " + (refH.toFixed(2));
+    }();
+    sumtextarray[2] = function() {
+	return shiftCompName+" caloric expenditure = " + (compH.toFixed(2));
+    }();
+    hedotools.shifterTwo.setTextBold(1);
+    // hedotools.shifterTwo.setWidth(modalwidth);
+    hedotools.shifterTwo.setText(sumtextarray);
+    hedotools.shifterTwo._xlabel_text("Per activity phrase caloric expenditure shift");
+    hedotools.shifterTwo._ylabel_text("Activity rank");
+    hedotools.shifterTwo.setfigure(d3.select("#shift02")).plot();
 };
 
 initializePlot();
