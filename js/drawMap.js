@@ -170,10 +170,10 @@ function drawMap(figure,data,sorted_json) {
 	var refH = hedotools.shifter._refH();
 	var compH = hedotools.shifter._compH();
 	if (compH >= refH) {
-	    var happysad = "more caloric";
+	    var happysad = " consumes more calories on average:";
 	}
 	else { 
-	    var happysad = "less caloric";
+	    var happysad = " consumes less calories average:";
 	}
 	var sumtextarray = ["","",""];
 	sumtextarray[0] = function() {
@@ -181,7 +181,7 @@ function drawMap(figure,data,sorted_json) {
 		return "How the food phrases of the whole US and "+shiftCompName+" differ";
 	    }
 	    else {
-		return "Why "+shiftCompName+" is "+happysad+" on average:";
+		return "Why "+shiftCompName+happysad;		
 	    }
 	}();
 	sumtextarray[1] = function() {
@@ -200,18 +200,18 @@ function drawMap(figure,data,sorted_json) {
 	var refH = hedotools.shifterTwo._refH();
 	var compH = hedotools.shifterTwo._compH();
 	if (compH >= refH) {
-	    var happysad = " expends more calories ";
+	    var happysad = " expends more calories on average:";
 	}
 	else {
-	    var happysad = " expends fewer calories ";
-	}
+	    var happysad = " expends fewer calories on average:";
+	}	
 	var sumtextarray = ["","",""];
 	sumtextarray[0] = function() {
 	    if (Math.abs(refH-compH) < 0.01) {
 		return "How the activity phrases of the whole US and "+shiftCompName+" differ";
 	    }
 	    else {
-		return "Why "+shiftCompName+happysad+" on average:";
+		return "Why "+shiftCompName+happysad;
 	    }
 	}();
 	sumtextarray[1] = function() {
