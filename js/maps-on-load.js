@@ -72,8 +72,10 @@ function initializePlotPlot() {
     allUSact = stateAct.map(function(d) { return d3.sum(d); });
 
     i = state_decoder().cached;
-    shiftComp = sortedStates[i][1];
-    shiftCompName = sortedStates[i][2];
+    // shiftComp = sortedStates[i][1];
+    shiftComp = i;
+    // shiftCompName = sortedStates[i][2];
+    shiftCompName = sorted_state_json[i].properties.name;
 
     d3.selectAll("."+shiftCompName[0]+shiftCompName.split(" ")[shiftCompName.split(" ").length-1]).attr("fill","red");
     
@@ -114,10 +116,11 @@ function initializePlotPlot() {
     }();
 	
     hedotools.shifter.setText(sumtextarray);
-    console.log(sumtextarray);
+    // console.log(sumtextarray);
     hedotools.shifter._xlabel_text("Per food phrase caloric shift");
     hedotools.shifter._ylabel_text("Food rank");
     hedotools.shifter.plot();
+    // hedotools.shifter.resetbuttontoggle(false);
 
     hedotools.shifterTwo._refF(allUSact);
     hedotools.shifterTwo._compF(stateAct.map(function(d) { return parseFloat(d[shiftComp]); }));
@@ -153,6 +156,7 @@ function initializePlotPlot() {
     hedotools.shifterTwo._xlabel_text("Per activity phrase caloric expenditure shift");
     hedotools.shifterTwo._ylabel_text("Activity rank");
     hedotools.shifterTwo.setfigure(d3.select("#shift02")).plot();
+    // hedotools.shifterTwo.resetbuttontoggle(false);    
 };
 
 initializePlot();

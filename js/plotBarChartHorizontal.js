@@ -21,7 +21,7 @@ function plotBarChart(figure,data,geodata) {
 
     data = data.map(function(d) { return d-d3.mean(data); });
 
-    console.log(geodata);
+    // console.log(geodata);
 
     // do the sorting
     indices = Array(data.length);
@@ -35,12 +35,13 @@ function plotBarChart(figure,data,geodata) {
     // var sortedStates;
     sortedStates = Array(data.length);
     for (var i = 0; i < data.length; i++) { sortedStates[i] = [i,indices[i],geodata[indices[i]].properties.name,data[indices[i]]]; }
-    console.log(sortedStates);
+    // console.log(sortedStates);
 
     // remove an old figure if it exists
     figure.select(".canvas").remove();
 
     var canvas = figure.append("svg")
+    	.attr("id","barsvg")
 	.attr("width",figwidth)
 	.attr("height",figheight)
 	.attr("class","canvas")
@@ -232,8 +233,8 @@ function plotBarChart(figure,data,geodata) {
     // }
 
     function state_hover(d,i) { 
-	console.log("from the bar chart:");
-	console.log(sortedStates[i]);
+	// console.log("from the bar chart:");
+	// console.log(sortedStates[i]);
 	
 	axes.selectAll("rect.staterect")
     	    .attr("fill",function(d,i) { return qcolor(d[3]); });
@@ -244,14 +245,15 @@ function plotBarChart(figure,data,geodata) {
 	// d3.select(this).attr("fill","red");
 	// console.log("."+d[2][0]+d[2].split(" ")[d[2].split(" ").length-1]);
 	d3.selectAll("."+d[2][0]+d[2].split(" ")[d[2].split(" ").length-1]).attr("fill","red");
-	
+
 	shiftComp = sortedStates[i][1];
 	shiftCompName = sortedStates[i][2];
+	state_encoder.varval(shiftComp.toFixed(0));
 
 	if (shiftCompName === "District of Columbia") {
 	    shiftCompName = "DC";
 	}
-	console.log(shiftCompName);
+	// console.log(shiftCompName);
 	
 	hedotools.shifter._refF(allUSfood);
 	hedotools.shifter._compF(stateFood.map(function(d) { return parseFloat(d[shiftComp]); }));

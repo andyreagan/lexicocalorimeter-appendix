@@ -233,9 +233,11 @@ hedotools.shifter = function()
 	resetButton(_);
 	if (_) {
 	    figure.select("g.help").style("visibility","visible");
+	    figure.selectAll("text.credit").style("visibility","visible");	    
 	}
 	else {
 	    figure.select("g.help").style("visibility","hidden");
+	    figure.selectAll("text.credit").style("visibility","hidden");	    
 	}
 	return hedotools.shifter;
     }

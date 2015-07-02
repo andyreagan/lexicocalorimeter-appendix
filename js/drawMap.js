@@ -43,8 +43,8 @@ function drawMap(figure,data,sorted_json) {
 	colors[i] = hslToRgb((hueRange[0]+(hueRange[1]-hueRange[0])/(numColors-1)*i)/360, saturation, lightness);
 	colorStrings[i] = "rgb(" + colors[i][0] + "," + colors[i][1] + "," + colors[i][2] + ")"
     }
-    console.log(colors);
-    console.log(colorStrings);
+    // console.log(colors);
+    // console.log(colorStrings);
     
     //Define quantize scale to sort data values into buckets of color
     color = d3.scale.quantize()
@@ -59,6 +59,7 @@ function drawMap(figure,data,sorted_json) {
     //Create SVG element
     var canvas = figure
 	.append("svg")
+    	.attr("id","mapsvg")    
 	.attr("class", "canvas")
 	.attr("width", w)
 	.attr("height", h);
@@ -139,8 +140,8 @@ function drawMap(figure,data,sorted_json) {
     }
 
     function state_hover(d,i) {
-	console.log("from the map:");
-	console.log(i);
+	// console.log("from the map:");
+	// console.log(i);
 
 	d3.selectAll("rect.staterect")
     	    .attr("fill",function(d,i) { return qcolor(d[3]); });
@@ -151,14 +152,17 @@ function drawMap(figure,data,sorted_json) {
 	d3.selectAll("."+d.properties.name[0]+d.properties.name.split(" ")[d.properties.name.split(" ").length-1]).attr("fill","red");
 	
 	// d3.select(this).attr("fill","red");
-	
+
+	state_encoder.varval(i.toFixed(0));
+	// shiftComp = sortedStates[i][1];
+	// shiftCompName = sortedStates[i][2];
 	shiftComp = i;
 	shiftCompName = d.properties.name;
 
-		if (shiftCompName === "District of Columbia") {
+	if (shiftCompName === "District of Columbia") {
 	    shiftCompName = "DC";
 	}
-	console.log(shiftCompName);
+	// console.log(shiftCompName);
 	
 	hedotools.shifter._refF(allUSfood);
 	hedotools.shifter._compF(stateFood.map(function(d) { return parseFloat(d[shiftComp]); }));

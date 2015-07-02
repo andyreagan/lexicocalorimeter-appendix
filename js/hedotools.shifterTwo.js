@@ -236,6 +236,7 @@ hedotools.shifterTwo = function()
 	}
 	else {
 	    figure.select("g.help").style("visibility","hidden");
+	    figure.selectAll("text.credit").style("visibility","hidden");	    
 	}
 	return hedotools.shifterTwo;
     }
@@ -831,7 +832,7 @@ hedotools.shifterTwo = function()
 	// made a new svg
 	figure.selectAll("svg").remove();
 	canvas = figure.append("svg")
-	    .attr("id","shiftsvg")
+	    .attr("id","shiftsvg2")
 	    .attr("width",function () { return boxwidth; })
 	    .attr("height",function () { return boxheight; });
 	
