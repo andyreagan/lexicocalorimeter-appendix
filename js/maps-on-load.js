@@ -72,9 +72,8 @@ function initializePlotPlot() {
     allUSact = stateAct.map(function(d) { return d3.sum(d); });
 
     i = state_decoder().cached;
-    // shiftComp = sortedStates[i][1];
     shiftComp = i;
-    // shiftCompName = sortedStates[i][2];
+    compRank = stateRanks[shiftComp];
     shiftCompName = sorted_state_json[i].properties.name;
 
     d3.selectAll("."+shiftCompName[0]+shiftCompName.split(" ")[shiftCompName.split(" ").length-1]).attr("fill","red");
@@ -112,7 +111,7 @@ function initializePlotPlot() {
 	return "Average US calories = " + (refH.toFixed(2));
     }();
     sumtextarray[2] = function() {
-		return shiftCompName+" calories = " + (compH.toFixed(2));
+	return shiftCompName+" calories = " + (compH.toFixed(2)) + " (Rank " + (compRank+1) + " out of 49)";
     }();
 	
     hedotools.shifter.setText(sumtextarray);
@@ -120,7 +119,6 @@ function initializePlotPlot() {
     hedotools.shifter._xlabel_text("Per food phrase caloric shift");
     hedotools.shifter._ylabel_text("Food rank");
     hedotools.shifter.plot();
-    // hedotools.shifter.resetbuttontoggle(false);
 
     hedotools.shifterTwo._refF(allUSact);
     hedotools.shifterTwo._compF(stateAct.map(function(d) { return parseFloat(d[shiftComp]); }));
@@ -148,7 +146,7 @@ function initializePlotPlot() {
 	return "Average US caloric expenditure = " + (refH.toFixed(2));
     }();
     sumtextarray[2] = function() {
-	return shiftCompName+" caloric expenditure = " + (compH.toFixed(2));
+	return shiftCompName+" caloric expenditure = " + (compH.toFixed(2)) + " (Rank " + (compRank+1) + " out of 49)";
     }();
     hedotools.shifterTwo.setTextBold(1);
     // hedotools.shifterTwo.setWidth(modalwidth);
@@ -156,7 +154,6 @@ function initializePlotPlot() {
     hedotools.shifterTwo._xlabel_text("Per activity phrase caloric expenditure shift");
     hedotools.shifterTwo._ylabel_text("Activity rank");
     hedotools.shifterTwo.setfigure(d3.select("#shift02")).plot();
-    // hedotools.shifterTwo.resetbuttontoggle(false);    
 };
 
 initializePlot();

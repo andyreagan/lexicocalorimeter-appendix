@@ -154,9 +154,9 @@ function drawMap(figure,data,sorted_json) {
 	// d3.select(this).attr("fill","red");
 
 	state_encoder.varval(i.toFixed(0));
-	// shiftComp = sortedStates[i][1];
 	// shiftCompName = sortedStates[i][2];
 	shiftComp = i;
+	compRank = stateRanks[shiftComp];		
 	shiftCompName = d.properties.name;
 
 	if (shiftCompName === "District of Columbia") {
@@ -188,7 +188,7 @@ function drawMap(figure,data,sorted_json) {
 	    return "Average US calories = " + (refH.toFixed(2));
 	}();
 	sumtextarray[2] = function() {
-	    return shiftCompName+" calories = " + (compH.toFixed(2));
+	    return shiftCompName+" calories = " + (compH.toFixed(2)) + " (Rank " + (compRank+1) + " out of 49)";
 	}();
 	
 	hedotools.shifter.setText(sumtextarray);
@@ -218,7 +218,7 @@ function drawMap(figure,data,sorted_json) {
 	    return "Average US caloric expenditure = " + (refH.toFixed(2));
 	}();
 	sumtextarray[2] = function() {
-	    return shiftCompName+" caloric expenditure = " + (compH.toFixed(2));
+	    return shiftCompName+" caloric expenditure = " + (compH.toFixed(2)) + " (Rank " + (compRank+1) + " out of 49)";
 	}();
 	// hedotools.shifterTwo.setWidth(modalwidth);
 	hedotools.shifterTwo.setText(sumtextarray);

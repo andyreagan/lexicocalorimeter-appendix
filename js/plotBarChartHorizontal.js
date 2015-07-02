@@ -34,7 +34,11 @@ function plotBarChart(figure,data,geodata) {
     // global
     // var sortedStates;
     sortedStates = Array(data.length);
-    for (var i = 0; i < data.length; i++) { sortedStates[i] = [i,indices[i],geodata[indices[i]].properties.name,data[indices[i]]]; }
+    stateRanks = Array(data.length);
+    for (var i = 0; i < data.length; i++) {
+	sortedStates[i] = [i,indices[i],geodata[indices[i]].properties.name,data[indices[i]]];
+	stateRanks[indices[i]] = i;
+    }
     // console.log(sortedStates);
 
     // remove an old figure if it exists
@@ -247,6 +251,7 @@ function plotBarChart(figure,data,geodata) {
 	d3.selectAll("."+d[2][0]+d[2].split(" ")[d[2].split(" ").length-1]).attr("fill","red");
 
 	shiftComp = sortedStates[i][1];
+	compRank = stateRanks[shiftComp];	
 	shiftCompName = sortedStates[i][2];
 	state_encoder.varval(shiftComp.toFixed(0));
 
@@ -279,7 +284,7 @@ function plotBarChart(figure,data,geodata) {
 	    return "Average US calories = " + (refH.toFixed(2));
 	}();
 	sumtextarray[2] = function() {
-	    return shiftCompName+" calories = " + (compH.toFixed(2));
+	    return shiftCompName+" calories = " + (compH.toFixed(2)) + " (Rank " + (compRank+1) + " out of 49)";
 	}();
 	
 	hedotools.shifter.setText(sumtextarray);
@@ -309,7 +314,7 @@ function plotBarChart(figure,data,geodata) {
 	    return "Average US caloric expenditure = " + (refH.toFixed(2));
 	}();
 	sumtextarray[2] = function() {
-	    return shiftCompName+" caloric expenditure = " + (compH.toFixed(2));
+	    return shiftCompName+" caloric expenditure = " + (compH.toFixed(2)) + " (Rank " + (compRank+1) + " out of 49)";
 	}();
 	// hedotools.shifterTwo.setWidth(modalwidth);
 	hedotools.shifterTwo.setText(sumtextarray);

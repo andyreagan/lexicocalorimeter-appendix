@@ -815,7 +815,7 @@ hedotools.shifterTwo = function()
 	    // console.log(comparisonText);
 	}
 	else {
-	    comparisonText = splitstring(comparisonText,boxwidth-10-logowidth,'14px arial');
+	    // comparisonText = splitstring(comparisonText,boxwidth-10-logowidth,'14px arial');
 	    // console.log(comparisonText);
 	}
 	
@@ -1760,7 +1760,7 @@ hedotools.shifterTwo = function()
 	    // console.log(comparisonText);
 	}
 	else {
-	    comparisonText = splitstring(comparisonText,boxwidth-10-logowidth,'14px arial');
+	    // comparisonText = splitstring(comparisonText,boxwidth-10-logowidth,'14px arial');
 	    // console.log(comparisonText);
 	}
 
