@@ -4,7 +4,7 @@ var rectHeight = 11;
 var sumRectHeight = 15;
 
 var state_encoder = d3.urllib.encoder().varname("ID");
-var state_decoder = d3.urllib.decoder().varname("ID").varresult(0);
+var state_decoder = d3.urllib.decoder().varname("ID").varresult(Math.floor(Math.random() * 49));
 
 function initializePlot() {
     loadCsv();
