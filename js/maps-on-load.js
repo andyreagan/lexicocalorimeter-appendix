@@ -141,7 +141,7 @@ function initializePlotPlot() {
 	    return "How the activity phrases of the whole US and "+shiftCompName+" differ";
 	}
 	else {
-	    return "Why "+shiftCompName+" is "+happysad+" on average:";
+	    return "Why "+shiftCompName+happysad+" on average:";
 	}
     }();
     sumtextarray[1] = function() {
