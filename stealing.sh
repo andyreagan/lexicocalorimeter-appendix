@@ -1,20 +1,40 @@
+# for ID in {0..48}
+# do
+#     # take the first one
+#     phantomjs my-crowbar.js http://127.0.0.1:8080/maps.html?ID=${ID} shiftsvg shifts/food-${ID}.svg
+#     # take the second one
+#     phantomjs my-crowbar.js http://127.0.0.1:8080/maps.html?ID=${ID} shiftsvg2 shifts/activity-${ID}.svg    
+#     for WORDS in posup posdown negup negdown
+#     do
+# 	phantomjs my-crowbar.js http://127.0.0.1:8080/maps.html?ID=${ID}\&wordtypes=${WORDS} shiftsvg shifts/food-${ID}-${WORDS}.svg
+# 	phantomjs my-crowbar.js http://127.0.0.1:8080/maps.html?ID=${ID}\&wordtypes=${WORDS} shiftsvg2 shifts/activity-${ID}-${WORDS}.svg
+#     done
+# done
+
+phantomjs my-crowbar.js http://127.0.0.1:8080/maps.html?ID=${ID} barsvg figures/barsvg.svg
+rsvg-convert --format=eps figures/barsvg.svg > figures/barsvg.eps
+epstopdf figures/barsvg.eps
+
+phantomjs my-crowbar.js http://127.0.0.1:8080/maps.html?ID=${ID} mapsvg figures/mapsvg.svg
+rsvg-convert --format=eps figures/mapsvg.svg > figures/mapsvg.eps
+epstopdf figures/mapsvg.eps
+
+cd shifts
 for ID in {0..48}
 do
-    # take the first one
-    sleep .01
-    phantomjs my-crowbar.js http://127.0.0.1:8080/maps.html?ID=${ID} shiftsvg shifts/food-${ID}.svg
-    # take the second one
-    sleep .01   
-    phantomjs my-crowbar.js http://127.0.0.1:8080/maps.html?ID=${ID} shiftsvg2 shifts/activity-${ID}.svg    
+    rsvg-convert --format=eps food-${ID}.svg > food-${ID}.eps
+    epstopdf food-${ID}.eps
+    rsvg-convert --format=eps activity-${ID}.svg > activity-${ID}.eps
+    epstopdf activity-${ID}.eps
     for WORDS in posup posdown negup negdown
     do
-	sleep .01
-	phantomjs my-crowbar.js http://127.0.0.1:8080/maps.html?ID=${ID}\&wordtypes=${WORDS} shiftsvg shifts/food-${ID}-${WORDS}.svg
-	sleep .01	
-	phantomjs my-crowbar.js http://127.0.0.1:8080/maps.html?ID=${ID}\&wordtypes=${WORDS} shiftsvg2 shifts/activity-${ID}-${WORDS}.svg
+	rsvg-convert --format=eps food-${ID}-${WORDS}.svg > food-${ID}-${WORDS}.eps
+	epstopdf food-${ID}-${WORDS}.eps
+	rsvg-convert --format=eps activity-${ID}-${WORDS}.svg > activity-${ID}-${WORDS}.eps
+	epstopdf activity-${ID}-${WORDS}.eps	
     done
-
 done
+cd ..
 
 # for ID in {0..48}
 # do    

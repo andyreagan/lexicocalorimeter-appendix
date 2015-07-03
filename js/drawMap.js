@@ -156,7 +156,6 @@ function drawMap(figure,data,sorted_json) {
 	state_encoder.varval(i.toFixed(0));
 	// shiftCompName = sortedStates[i][2];
 	shiftComp = i;
-	compRank = stateRanks[shiftComp];		
 	shiftCompName = d.properties.name;
 
 	if (shiftCompName === "District of Columbia") {
@@ -173,7 +172,7 @@ function drawMap(figure,data,sorted_json) {
 	    var happysad = " consumes more calories on average:";
 	}
 	else { 
-	    var happysad = " consumes less calories average:";
+	    var happysad = " consumes less calories on average:";
 	}
 	var sumtextarray = ["","",""];
 	sumtextarray[0] = function() {
@@ -188,11 +187,11 @@ function drawMap(figure,data,sorted_json) {
 	    return "Average US calories = " + (refH.toFixed(2));
 	}();
 	sumtextarray[2] = function() {
-	    return shiftCompName+" calories = " + (compH.toFixed(2)) + " (Rank " + (compRank+1) + " out of 49)";
+	    return shiftCompName+" calories = " + (compH.toFixed(2)) + " (Rank " + (foodRanks[shiftComp]+1) + " out of 49)";
 	}();
 	
 	hedotools.shifter.setText(sumtextarray);
-	hedotools.shifter.plot();
+	hedotools.shifter.replot();
 
 	hedotools.shifterTwo._refF(allUSact);
 	hedotools.shifterTwo._compF(stateAct.map(function(d) { return parseFloat(d[shiftComp]); }));
@@ -218,11 +217,11 @@ function drawMap(figure,data,sorted_json) {
 	    return "Average US caloric expenditure = " + (refH.toFixed(2));
 	}();
 	sumtextarray[2] = function() {
-	    return shiftCompName+" caloric expenditure = " + (compH.toFixed(2)) + " (Rank " + (compRank+1) + " out of 49)";
+	    return shiftCompName+" caloric expenditure = " + (compH.toFixed(2)) + " (Rank " + (activityRanks[shiftComp]+1) + " out of 49)";
 	}();
 	// hedotools.shifterTwo.setWidth(modalwidth);
 	hedotools.shifterTwo.setText(sumtextarray);
-	hedotools.shifterTwo.plot();
+	hedotools.shifterTwo.replot();
     }
 
     function state_unhover(d,i) { 

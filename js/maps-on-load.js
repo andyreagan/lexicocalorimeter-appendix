@@ -73,21 +73,23 @@ function initializePlotPlot() {
 
     i = state_decoder().cached;
     shiftComp = i;
-    compRank = stateRanks[shiftComp];
     shiftCompName = sorted_state_json[i].properties.name;
-
+    
     d3.selectAll("."+shiftCompName[0]+shiftCompName.split(" ")[shiftCompName.split(" ").length-1]).attr("fill","red");
     
     if (shiftCompName === "District of Columbia") {
 	shiftCompName = "DC";
     }
     console.log(shiftCompName);
-    
-    hedotools.shifter.setfigure(d3.select("#shift01"));
-    hedotools.shifter._refF(allUSfood);
-    hedotools.shifter._compF(stateFood.map(function(d) { return parseFloat(d[shiftComp]); }));
+
     hedotools.shifter._words(foodNames);
     hedotools.shifter._lens(foodCals);
+    hedotools.shifter._refF(allUSfood);
+    // computeFoodRanks()    
+    foodRanks = [38, 10, 36, 21, 1, 24, 16, 3, 8, 14, 22, 15, 41, 42, 39, 43, 35, 0, 6, 11, 34, 5, 33, 9, 44, 32, 7, 2, 30, 31, 12, 29, 46, 45, 40, 13, 27, 18, 26, 48, 20, 37, 25, 28, 17, 19, 47, 4, 23];
+    hedotools.shifter.setfigure(d3.select("#shift01"));
+    hedotools.shifter._split_top_strings(false);
+    hedotools.shifter._compF(stateFood.map(function(d) { return parseFloat(d[shiftComp]); }));
     hedotools.shifter.setTextBold(1);
     hedotools.shifter.shifter();
     var refH = hedotools.shifter._refH();
@@ -96,7 +98,7 @@ function initializePlotPlot() {
 	var happysad = " consumes more calories on average:";
     }
     else { 
-	var happysad = " consumes less calories average:";
+	var happysad = " consumes less calories on average:";
     }
     var sumtextarray = ["","",""];
     sumtextarray[0] = function() {
@@ -111,7 +113,7 @@ function initializePlotPlot() {
 	return "Average US calories = " + (refH.toFixed(2));
     }();
     sumtextarray[2] = function() {
-	return shiftCompName+" calories = " + (compH.toFixed(2)) + " (Rank " + (compRank+1) + " out of 49)";
+	return shiftCompName+" calories = " + (compH.toFixed(2)) + " (Rank " + (foodRanks[shiftComp]+1) + " out of 49)";
     }();
 	
     hedotools.shifter.setText(sumtextarray);
@@ -120,10 +122,13 @@ function initializePlotPlot() {
     hedotools.shifter._ylabel_text("Food rank");
     hedotools.shifter.plot();
 
-    hedotools.shifterTwo._refF(allUSact);
-    hedotools.shifterTwo._compF(stateAct.map(function(d) { return parseFloat(d[shiftComp]); }));
     hedotools.shifterTwo._words(actNames);
     hedotools.shifterTwo._lens(actCals);
+    hedotools.shifterTwo._refF(allUSact);
+    // computeActivityRanks();
+    activityRanks = [43, 17, 45, 9, 1, 32, 46, 28, 25, 42, 18, 30, 26, 8, 21, 36, 47, 13, 44, 23, 41, 7, 48, 27, 4, 11, 24, 14, 35, 16, 10, 38, 15, 31, 19, 5, 33, 22, 39, 6, 37, 34, 3, 2, 29, 12, 40, 20, 0];
+    hedotools.shifterTwo._split_top_strings(false);
+    hedotools.shifterTwo._compF(stateAct.map(function(d) { return parseFloat(d[shiftComp]); }));
     hedotools.shifterTwo.shifter();
     var refH = hedotools.shifterTwo._refH();
     var compH = hedotools.shifterTwo._compH();
@@ -146,7 +151,7 @@ function initializePlotPlot() {
 	return "Average US caloric expenditure = " + (refH.toFixed(2));
     }();
     sumtextarray[2] = function() {
-	return shiftCompName+" caloric expenditure = " + (compH.toFixed(2)) + " (Rank " + (compRank+1) + " out of 49)";
+	return shiftCompName+" caloric expenditure = " + (compH.toFixed(2)) + " (Rank " + (activityRanks[shiftComp]+1) + " out of 49)";
     }();
     hedotools.shifterTwo.setTextBold(1);
     // hedotools.shifterTwo.setWidth(modalwidth);
@@ -158,4 +163,44 @@ function initializePlotPlot() {
 
 initializePlot();
 
+function computeFoodRanks() {
+    foodScores = Array(49);
+    for (var shiftComp=0; shiftComp<49; shiftComp++) {
+	hedotools.shifter._compF(stateFood.map(function(d) { return parseFloat(d[shiftComp]); }));
+	hedotools.shifter.shifter();
+	var compH = hedotools.shifter._compH();
+	foodScores[shiftComp] = compH;
+    }
+    // do the sorting
+    indices = Array(foodScores.length);
+    for (var i = 0; i < foodScores.length; i++) { indices[i] = i; }
+    indices.sort(function(a,b) { return foodScores[b] < foodScores[a] ? 1 : foodScores[b] > foodScores[a] ? -1 : 0; });
+
+    foodRanks = Array(foodScores.length);
+    for (var i = 0; i < foodScores.length; i++) {
+	foodRanks[indices[i]] = i;
+    }
+    // return foodRanks;
+}
+
+function computeActivityRanks() {
+    activityScores = Array(49);
+    for (var shiftComp=0; shiftComp<49; shiftComp++) {
+	hedotools.shifterTwo._compF(stateAct.map(function(d) { return parseFloat(d[shiftComp]); }));	
+	hedotools.shifterTwo.shifter();
+	var compH = hedotools.shifterTwo._compH();
+	activityScores[shiftComp] = compH;
+    }
+
+    // do the sorting
+    indices = Array(activityScores.length);
+    for (var i = 0; i < activityScores.length; i++) { indices[i] = i; }
+    indices.sort(function(a,b) { return activityScores[a] < activityScores[b] ? 1 : activityScores[a] > activityScores[b] ? -1 : 0; });
+
+    activityRanks = Array(activityScores.length);
+    for (var i = 0; i < activityScores.length; i++) {
+	activityRanks[indices[i]] = i;
+    }
+    // return activityRanks;    
+}
 

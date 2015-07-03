@@ -47,6 +47,13 @@ hedotools.shifterTwo = function()
 	return hedotools.shifterTwo;
     }
 
+    var split_top_strings = true;
+    var _split_top_strings = function(_) {
+	if (!arguments.length) return split_top_strings;	
+	split_top_strings = _;
+	return hedotools.shifterTwo;
+    }    
+
     var splitstring = function(_,w,f) {
 	// take an array of strings _
 	// a formatter f
@@ -233,6 +240,7 @@ hedotools.shifterTwo = function()
 	resetButton(_);
 	if (_) {
 	    figure.select("g.help").style("visibility","visible");
+	    figure.selectAll("text.credit").style("visibility","visible");	    
 	}
 	else {
 	    figure.select("g.help").style("visibility","hidden");
@@ -253,12 +261,18 @@ hedotools.shifterTwo = function()
 	return hedotools.shifterTwo;
     }
 
-    var colorArray = ["#202020","#D8D8D8","#D8D8D8"];
-    var topFontSizeArray = [14,12,12];
+    var colorArray = ["#202020","#D8D8D8","#D8D8D8","#D8D8D8","#D8D8D8"];
+    var topFontSizeArray = [14,12,12,12,12];
     
     var setTextColors = function(_) {
 	if (!arguments.length) return colorArray;
 	colorArray = _;
+	return hedotools.shifterTwo;
+    }
+
+    var setTopTextSizes = function(_) {
+	if (!arguments.length) return topFontSizeArray;
+	topFontSizeArray = _;
 	return hedotools.shifterTwo;
     }
 
@@ -815,7 +829,9 @@ hedotools.shifterTwo = function()
 	    // console.log(comparisonText);
 	}
 	else {
-	    // comparisonText = splitstring(comparisonText,boxwidth-10-logowidth,'14px arial');
+	    if ( split_top_strings ) {
+		comparisonText = splitstring(comparisonText,boxwidth-10-logowidth,'14px arial');
+	    }
 	    // console.log(comparisonText);
 	}
 	
@@ -832,7 +848,7 @@ hedotools.shifterTwo = function()
 	// made a new svg
 	figure.selectAll("svg").remove();
 	canvas = figure.append("svg")
-	    .attr("id","shiftsvg2")
+	    .attr("id","shiftsvg")
 	    .attr("width",function () { return boxwidth; })
 	    .attr("height",function () { return boxheight; });
 	
@@ -1597,7 +1613,8 @@ hedotools.shifterTwo = function()
 	}
 
 	credit = axes.selectAll('text.credit')
-	    .data(['visualization by','@andyreagan'])
+	// .data(['visualization by','@andyreagan','word shifts by','@hedonometer'])
+	    .data(['visualization by','@andyreagan',])
 	    .enter()
 	    .append('text')
             .attr({'class': 'credit',
@@ -1760,7 +1777,9 @@ hedotools.shifterTwo = function()
 	    // console.log(comparisonText);
 	}
 	else {
-	    // comparisonText = splitstring(comparisonText,boxwidth-10-logowidth,'14px arial');
+	    if ( split_top_strings ) {
+		comparisonText = splitstring(comparisonText,boxwidth-10-logowidth,'14px arial');
+	    }
 	    // console.log(comparisonText);
 	}
 
@@ -1847,24 +1866,20 @@ hedotools.shifterTwo = function()
 		    'x': 3,
 		    'class': function(d,i) { return 'titletext '+intStr[i]; }, })
 	    .style({ 'font-family': 'Helvetica Neue',
-		     'font-size': '14px',
+		     'font-size': function(d,i) { return topFontSizeArray[i]; },
 		     'line-height': '1.42857143',
-		     'color': '#333',
+		     'color': function(d,i) { return colorArray[i]; },
 		     // if there are 4 items...make the first two bold
 		     'font-weight': function(d,i) { 
-			 if (comparisonText.length > 3) {
-			     if (i < (comparisonText.length - 2) ) {
-				 return "bold";
-			     }
-			     else {
-				 return "normal";
-			     }
+			 // using this variable numBoldLines
+			 if (i < numBoldLines) {
+			     return "bold";
 			 }
 			 else {
 			     return "normal";
 			 }
 		     },
-		   })
+		   })	
 	    .text(function(d,i) { return d; });
 
 	bottombgrect.attr("y",fullheight-axeslabelmargin.bottom-toptextheight);
@@ -2159,6 +2174,8 @@ hedotools.shifterTwo = function()
 		    _xlabel_text: _xlabel_text,
 		    _ylabel_text: _ylabel_text,
 		    setTextColors: setTextColors,
+		    setTopTextSizes: setTopTextSizes,
+		    _split_top_strings: _split_top_strings,
 		  }
     return opublic;
 }();
