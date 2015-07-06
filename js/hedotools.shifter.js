@@ -126,6 +126,9 @@ hedotools.shifter = function()
     // need to be tuned to the height of the plot
     var iBarH = 11;
     var numWords = 23; // 37 with height 650
+
+    // max length of words to plot
+    var maxChars = 20;    
     
     // all inside the axes
     var yHeight = (7+17*3+14+5-13); // 101
@@ -642,8 +645,22 @@ hedotools.shifter = function()
 
 	for (var i = 0; i < numwordstoplot; i++) { 
 	    sortedMag[i] = shiftMag[indices[i]]; 
-	    sortedType[i] = shiftType[indices[i]]; 
-	    sortedWords[i] = words[indices[i]]; 
+	    sortedType[i] = shiftType[indices[i]]
+	    var tmpword = words[indices[i]];
+	    // add 1 to maxChars, because I'll add the ellipsis
+	    if (tmpword.length > maxChars+2) {
+		var shorterword = tmpword.slice(0,maxChars);
+		// check that the last char isn't a space (if it is, delete it)
+		if (shorterword[shorterword.length-1] === " ") {
+		    sortedWords[i] = shorterword.slice(0,shorterword.length-1)+"\u2026";
+		}
+		else {
+		    sortedWords[i] = shorterword+"\u2026";		    
+		}
+	    }
+	    else {
+		sortedWords[i] = tmpword;		
+	    }
 	}
 
 	if (distflag) {
@@ -877,10 +894,12 @@ hedotools.shifter = function()
 
 	maxWidth = d3.max(sortedWords.slice(0,5).map(function(d) { return d.width(); }));
 
+	// a little extra padding for the words
+	var xpadding = 10;
 	// linear scale function
 	x = d3.scale.linear()
 	    .domain([-Math.abs(sortedMag[0]),Math.abs(sortedMag[0])])
-	    .range([maxWidth+10,figwidth-maxWidth-10]);
+	    .range([maxWidth+xpadding,figwidth-maxWidth-xpadding]);	
 
 	// linear scale function
 	y = d3.scale.linear()
@@ -1785,11 +1804,13 @@ hedotools.shifter = function()
 
 	concatter();
 
+	// could set a cap to make sure no 0's
 	maxWidth = d3.max(sortedWords.slice(0,5).map(function(d) { return d.width(); }));
 
+	var xpadding = 10;
 	// linear scale function
 	x.domain([-Math.abs(sortedMag[0]),Math.abs(sortedMag[0])])
-	    .range([maxWidth+10,figwidth-maxWidth-10]);
+	    .range([maxWidth+xpadding,figwidth-maxWidth-xpadding]);		
 
 	// get the height again
 	toptextheight = comparisonText.length*17+13;

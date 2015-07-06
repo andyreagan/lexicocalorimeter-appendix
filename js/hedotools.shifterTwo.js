@@ -126,6 +126,9 @@ hedotools.shifterTwo = function()
     // need to be tuned to the height of the plot
     var iBarH = 11;
     var numWords = 23; // 37 with height 650
+
+    // max length of words to plot
+    var maxChars = 20;
     
     // all inside the axes
     var yHeight = (7+17*3+14+5-13); // 101
@@ -642,8 +645,22 @@ hedotools.shifterTwo = function()
 
 	for (var i = 0; i < numwordstoplot; i++) { 
 	    sortedMag[i] = shiftMag[indices[i]]; 
-	    sortedType[i] = shiftType[indices[i]]; 
-	    sortedWords[i] = words[indices[i]]; 
+	    sortedType[i] = shiftType[indices[i]];
+	    var tmpword = words[indices[i]];
+	    // add 1 to maxChars, because I'll add the ellipsis
+	    if (tmpword.length > maxChars+2) {
+		var shorterword = tmpword.slice(0,maxChars);
+		// check that the last char isn't a space (if it is, delete it)
+		if (shorterword[shorterword.length-1] === " ") {
+		    sortedWords[i] = shorterword.slice(0,shorterword.length-1)+"\u2026";
+		}
+		else {
+		    sortedWords[i] = shorterword+"\u2026";		    
+		}
+	    }
+	    else {
+		sortedWords[i] = tmpword;		
+	    }
 	}
 
 	if (distflag) {
@@ -876,11 +893,17 @@ hedotools.shifterTwo = function()
 	concatter();
 
 	maxWidth = d3.max(sortedWords.slice(0,5).map(function(d) { return d.width(); }));
+	// maxWidth = d3.max([maxWidth,15]);
+	// console.log([maxWidth+10,figwidth-maxWidth-10]);
+	// console.log(figcenter);
 
+	var xpadding = 10;
 	// linear scale function
 	x = d3.scale.linear()
 	    .domain([-Math.abs(sortedMag[0]),Math.abs(sortedMag[0])])
-	    .range([maxWidth+10,figwidth-maxWidth-10]);
+	    .range([maxWidth+xpadding,figwidth-maxWidth-xpadding]);
+
+	console.log(x(0));
 
 	// linear scale function
 	y = d3.scale.linear()
@@ -974,7 +997,7 @@ hedotools.shifterTwo = function()
 	    .data(sortedMag)
 	    .enter()
 	    .append('rect')
-	    .attr({ 
+	    .attr({
 		'class': function(d,i) { return 'shiftrect '+intStr0[sortedType[i]]+' '+typeClass[sortedType[i]]; },
 		'x': function(d,i) { 
 		    if (d>0) { return figcenter; } 
@@ -982,9 +1005,9 @@ hedotools.shifterTwo = function()
 		},
 		'y': function(d,i) { return y(i+1); },
 		'height': function(d,i) { return iBarH; },
-		'width': function(d,i) { 
-		    if ((d)>0) { return x(d)-x(0); }
-		    else { return x(0)-x(d); } 
+		'width': function(d,i) {
+		    if ((d)>0) { return x(d)-figcenter; }
+		    else { return figcenter-x(d); } 
 		},
 		'opacity': '0.7',
 		'stroke-width': '1',
@@ -1786,7 +1809,9 @@ hedotools.shifterTwo = function()
 	concatter();
 
 	maxWidth = d3.max(sortedWords.slice(0,5).map(function(d) { return d.width(); }));
-
+	maxWidth = d3.max([maxWidth,15]);
+	console.log(maxWidth);
+	
 	// linear scale function
 	x.domain([-Math.abs(sortedMag[0]),Math.abs(sortedMag[0])])
 	    .range([maxWidth+10,figwidth-maxWidth-10]);
@@ -1894,8 +1919,6 @@ hedotools.shifterTwo = function()
 	var newbars = axes.selectAll("rect.shiftrect").data(sortedMag);
 	var newwords = axes.selectAll("text.shifttext").data(sortedMag);
 
-
-	
 	// if we haven't dont a subselection, apply with a transition
 	if (shiftseldecoder().current === "none" || shiftseldecoder().current.length === 0) {
 	    newbars.transition()
