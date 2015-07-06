@@ -53,7 +53,7 @@ circuit training,4.3,347.01
 cleaning,3.3,266.31
 cleaning a bathroom,3.5,282.45
 cleaning garage,3.5,282.45
-cleaning or washing a vehicle,3.5,282.45
+cleaning vehicles,3.5,282.45
 cleaning yard,4,322.8
 climbing stairs,4,322.8
 clipping my nails,2,161.4
@@ -200,7 +200,7 @@ playing guitar,2,161.4
 playing handball,12,968.4
 playing pool,2.5,201.75
 playing video games,1,80.7
-playing video or computer games,1,80.7
+playing video games,1,80.7
 playing violin,2.5,201.75
 playing water polo,10,807
 playing with child,3.5,282.45
@@ -286,7 +286,7 @@ washing dishes,1.8,145.26
 washing windows,3.5,282.45
 watching child,2,161.4
 watching sports in person,1.5,121.05
-watching tv or movie,1.3,104.91
+watching tv/movies,1.3,104.91
 watching tv or movies laying down,1,80.7
 water skiing,7,564.9
 watering plants,2.5,201.75
