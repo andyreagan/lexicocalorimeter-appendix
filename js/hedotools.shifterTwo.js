@@ -2219,10 +2219,3 @@ hedotools.shifterTwo = function()
 		  }
     return opublic;
 }();
-
-
-
-
-
-
-
