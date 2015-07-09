@@ -818,6 +818,7 @@ hedotools.shifter = function()
 	    });
     }
 
+    var xAxis;
     var distgroup;
 
     var plot = function() {
@@ -948,7 +949,7 @@ hedotools.shifter = function()
 		.scale(x)
 		.orient("bottom"); }
 
-	var xAxis = create_xAxis()
+	xAxis = create_xAxis()
 	    .innerTickSize(3)
 	    .outerTickSize(0);
 
@@ -1810,7 +1811,10 @@ hedotools.shifter = function()
 	var xpadding = 10;
 	// linear scale function
 	x.domain([-Math.abs(sortedMag[0]),Math.abs(sortedMag[0])])
-	    .range([maxWidth+xpadding,figwidth-maxWidth-xpadding]);		
+	    .range([maxWidth+xpadding,figwidth-maxWidth-xpadding]);
+
+	canvas.select(".x.axis")
+	    .call(xAxis);
 
 	// get the height again
 	toptextheight = comparisonText.length*17+13;

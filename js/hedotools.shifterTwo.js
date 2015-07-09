@@ -819,7 +819,8 @@ hedotools.shifterTwo = function()
     }
 
     var distgroup;
-
+    var xAxis;
+    
     var plot = function() {
 	/* plot the shift
 
@@ -952,7 +953,7 @@ hedotools.shifterTwo = function()
 		.scale(x)
 		.orient("bottom"); }
 
-	var xAxis = create_xAxis()
+	xAxis = create_xAxis()
 	    .innerTickSize(3)
 	    .outerTickSize(0);
 
@@ -1815,6 +1816,9 @@ hedotools.shifterTwo = function()
 	// linear scale function
 	x.domain([-Math.abs(sortedMag[0]),Math.abs(sortedMag[0])])
 	    .range([maxWidth+10,figwidth-maxWidth-10]);
+
+	canvas.select(".x.axis")
+	    .call(xAxis);
 
 	// get the height again
 	toptextheight = comparisonText.length*17+13;
