@@ -19,7 +19,7 @@
 // can also use the setText method to set the text
 
 // define the shifter module 
-hedotools.shifterTwo = function()
+hedotools.shifterTwo = function() 
 {
     // for the word type selection
     var shiftselencoder = d3.urllib.encoder().varname("wordtypes");
@@ -52,7 +52,16 @@ hedotools.shifterTwo = function()
 	if (!arguments.length) return split_top_strings;	
 	split_top_strings = _;
 	return hedotools.shifterTwo;
-    }    
+    }
+
+    var show_x_axis_bool = false;
+    var show_x_axis = function(_) {
+	if (!arguments.length) return show_x_axis_bool;
+	show_x_axis_bool = _;
+	// give a litter extra space for it
+	axeslabelmargin.bottom = axeslabelmargin.bottom + 10;
+	return hedotools.shifterTwo;
+    }
 
     var splitstring = function(_,w,f) {
 	// take an array of strings _
@@ -114,7 +123,7 @@ hedotools.shifterTwo = function()
     var boxheight = fullheight-margin.top-margin.bottom;
 
     // margin inside
-    var axeslabelmargin = {top: 0, right: 3, bottom: 35, left: 23};
+    var axeslabelmargin = {top: 0, right: 3, bottom: 25, left: 23};
     
     // inner width and height
     // used for the axes
@@ -128,7 +137,7 @@ hedotools.shifterTwo = function()
     var numWords = 23; // 37 with height 650
 
     // max length of words to plot
-    var maxChars = 20;
+    var maxChars = 20;    
     
     // all inside the axes
     var yHeight = (7+17*3+14+5-13); // 101
@@ -645,7 +654,7 @@ hedotools.shifterTwo = function()
 
 	for (var i = 0; i < numwordstoplot; i++) { 
 	    sortedMag[i] = shiftMag[indices[i]]; 
-	    sortedType[i] = shiftType[indices[i]];
+	    sortedType[i] = shiftType[indices[i]]
 	    var tmpword = words[indices[i]];
 	    // add 1 to maxChars, because I'll add the ellipsis
 	    if (tmpword.length > maxChars+2) {
@@ -818,9 +827,9 @@ hedotools.shifterTwo = function()
 	    });
     }
 
-    var distgroup;
     var xAxis;
-    
+    var distgroup;
+
     var plot = function() {
 	/* plot the shift
 
@@ -894,17 +903,13 @@ hedotools.shifterTwo = function()
 	concatter();
 
 	maxWidth = d3.max(sortedWords.slice(0,5).map(function(d) { return d.width(); }));
-	// maxWidth = d3.max([maxWidth,15]);
-	// console.log([maxWidth+10,figwidth-maxWidth-10]);
-	// console.log(figcenter);
 
+	// a little extra padding for the words
 	var xpadding = 10;
 	// linear scale function
 	x = d3.scale.linear()
 	    .domain([-Math.abs(sortedMag[0]),Math.abs(sortedMag[0])])
-	    .range([maxWidth+xpadding,figwidth-maxWidth-xpadding]);
-
-	console.log(x(0));
+	    .range([maxWidth+xpadding,figwidth-maxWidth-xpadding]);	
 
 	// linear scale function
 	y = d3.scale.linear()
@@ -946,25 +951,28 @@ hedotools.shifterTwo = function()
 
 	bigshifttextsize = 13;
 
-	// axes creation functions
-	var create_xAxis = function() {
-	    return d3.svg.axis()
-		.ticks(4)
-		.scale(x)
-		.orient("bottom"); }
+	if (show_x_axis_bool) {
+	    // axes creation functions
+	    var create_xAxis = function() {
+		return d3.svg.axis()
+		    .ticks(4)
+		    .scale(x)
+		    .orient("bottom"); }
 
-	xAxis = create_xAxis()
-	    .innerTickSize(3)
-	    .outerTickSize(0);
+	    xAxis = create_xAxis()
+		.innerTickSize(3)
+		.outerTickSize(0);
 
-	canvas.append("g")
-	    .attr("class", "x axis ")
-	    .attr("font-size", "10.0px")
-	    .attr("transform", "translate("+(axeslabelmargin.left)+"," + (yHeight+figheight) + ")")
+	    canvas.append("g")
+		.attr("class", "x axis ")
+		.attr("font-size", "10.0px")
+		.attr("transform", "translate("+(axeslabelmargin.left)+"," + (yHeight+figheight) + ")")
 	    // .attr("transform", "translate(0," + (figheight) + ")")
-	    .call(xAxis);
+		.call(xAxis);
 
-	d3.selectAll(".tick line").style({'stroke':'black'});
+	    d3.selectAll(".tick line").style({'stroke':'black'});
+	}
+
 
 	// figure.selectAll("p.sumtext.ref")
 	// 	.data([refH,])
@@ -998,7 +1006,7 @@ hedotools.shifterTwo = function()
 	    .data(sortedMag)
 	    .enter()
 	    .append('rect')
-	    .attr({
+	    .attr({ 
 		'class': function(d,i) { return 'shiftrect '+intStr0[sortedType[i]]+' '+typeClass[sortedType[i]]; },
 		'x': function(d,i) { 
 		    if (d>0) { return figcenter; } 
@@ -1006,9 +1014,9 @@ hedotools.shifterTwo = function()
 		},
 		'y': function(d,i) { return y(i+1); },
 		'height': function(d,i) { return iBarH; },
-		'width': function(d,i) {
-		    if ((d)>0) { return x(d)-figcenter; }
-		    else { return figcenter-x(d); } 
+		'width': function(d,i) { 
+		    if ((d)>0) { return x(d)-x(0); }
+		    else { return x(0)-x(d); } 
 		},
 		'opacity': '0.7',
 		'stroke-width': '1',
@@ -1809,16 +1817,18 @@ hedotools.shifterTwo = function()
 
 	concatter();
 
+	// could set a cap to make sure no 0's
 	maxWidth = d3.max(sortedWords.slice(0,5).map(function(d) { return d.width(); }));
-	maxWidth = d3.max([maxWidth,15]);
-	console.log(maxWidth);
-	
+
+	var xpadding = 10;
 	// linear scale function
 	x.domain([-Math.abs(sortedMag[0]),Math.abs(sortedMag[0])])
-	    .range([maxWidth+10,figwidth-maxWidth-10]);
+	    .range([maxWidth+xpadding,figwidth-maxWidth-xpadding]);
 
-	canvas.select(".x.axis")
-	    .call(xAxis);
+	if (show_x_axis_bool) {
+	    canvas.select(".x.axis")
+		.call(xAxis);
+	}
 
 	// get the height again
 	toptextheight = comparisonText.length*17+13;
@@ -1923,6 +1933,8 @@ hedotools.shifterTwo = function()
 	var newbars = axes.selectAll("rect.shiftrect").data(sortedMag);
 	var newwords = axes.selectAll("text.shifttext").data(sortedMag);
 
+
+	
 	// if we haven't dont a subselection, apply with a transition
 	if (shiftseldecoder().current === "none" || shiftseldecoder().current.length === 0) {
 	    newbars.transition()
@@ -2175,7 +2187,8 @@ hedotools.shifterTwo = function()
 		    selfShifter: selfShifter,
 		    setfigure: setfigure,
 		    setdata: setdata,
-		    plot: plot, 
+		    plot: plot,
+		    show_x_axis: show_x_axis,
 		    replot: replot, 
 		    setText: setText,
 		    setWidth: setWidth,

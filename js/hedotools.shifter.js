@@ -19,7 +19,7 @@
 // can also use the setText method to set the text
 
 // define the shifter module 
-hedotools.shifter = function()
+hedotools.shifter = function() 
 {
     // for the word type selection
     var shiftselencoder = d3.urllib.encoder().varname("wordtypes");
@@ -52,7 +52,16 @@ hedotools.shifter = function()
 	if (!arguments.length) return split_top_strings;	
 	split_top_strings = _;
 	return hedotools.shifter;
-    }    
+    }
+
+    var show_x_axis_bool = false;
+    var show_x_axis = function(_) {
+	if (!arguments.length) return show_x_axis_bool;
+	show_x_axis_bool = _;
+	// give a litter extra space for it
+	axeslabelmargin.bottom = axeslabelmargin.bottom + 10;
+	return hedotools.shifter;
+    }
 
     var splitstring = function(_,w,f) {
 	// take an array of strings _
@@ -114,7 +123,7 @@ hedotools.shifter = function()
     var boxheight = fullheight-margin.top-margin.bottom;
 
     // margin inside
-    var axeslabelmargin = {top: 0, right: 3, bottom: 35, left: 23};
+    var axeslabelmargin = {top: 0, right: 3, bottom: 25, left: 23};
     
     // inner width and height
     // used for the axes
@@ -942,25 +951,28 @@ hedotools.shifter = function()
 
 	bigshifttextsize = 13;
 
-	// axes creation functions
-	var create_xAxis = function() {
-	    return d3.svg.axis()
-		.ticks(4)
-		.scale(x)
-		.orient("bottom"); }
+	if (show_x_axis_bool) {
+	    // axes creation functions
+	    var create_xAxis = function() {
+		return d3.svg.axis()
+		    .ticks(4)
+		    .scale(x)
+		    .orient("bottom"); }
 
-	xAxis = create_xAxis()
-	    .innerTickSize(3)
-	    .outerTickSize(0);
+	    xAxis = create_xAxis()
+		.innerTickSize(3)
+		.outerTickSize(0);
 
-	canvas.append("g")
-	    .attr("class", "x axis ")
-	    .attr("font-size", "10.0px")
-	    .attr("transform", "translate("+(axeslabelmargin.left)+"," + (yHeight+figheight) + ")")
+	    canvas.append("g")
+		.attr("class", "x axis ")
+		.attr("font-size", "10.0px")
+		.attr("transform", "translate("+(axeslabelmargin.left)+"," + (yHeight+figheight) + ")")
 	    // .attr("transform", "translate(0," + (figheight) + ")")
-	    .call(xAxis);
+		.call(xAxis);
 
-	d3.selectAll(".tick line").style({'stroke':'black'});
+	    d3.selectAll(".tick line").style({'stroke':'black'});
+	}
+
 
 	// figure.selectAll("p.sumtext.ref")
 	// 	.data([refH,])
@@ -1813,8 +1825,10 @@ hedotools.shifter = function()
 	x.domain([-Math.abs(sortedMag[0]),Math.abs(sortedMag[0])])
 	    .range([maxWidth+xpadding,figwidth-maxWidth-xpadding]);
 
-	canvas.select(".x.axis")
-	    .call(xAxis);
+	if (show_x_axis_bool) {
+	    canvas.select(".x.axis")
+		.call(xAxis);
+	}
 
 	// get the height again
 	toptextheight = comparisonText.length*17+13;
@@ -2173,7 +2187,8 @@ hedotools.shifter = function()
 		    selfShifter: selfShifter,
 		    setfigure: setfigure,
 		    setdata: setdata,
-		    plot: plot, 
+		    plot: plot,
+		    show_x_axis: show_x_axis,
 		    replot: replot, 
 		    setText: setText,
 		    setWidth: setWidth,
