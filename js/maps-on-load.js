@@ -120,6 +120,7 @@ function initializePlotPlot() {
     // console.log(sumtextarray);
     hedotools.shifter._xlabel_text("Per food phrase caloric shift");
     hedotools.shifter._ylabel_text("Food rank");
+    hedotools.shifter.show_x_axis(true);
     hedotools.shifter.plot();
 
     hedotools.shifterTwo._words(actNames);
@@ -158,7 +159,9 @@ function initializePlotPlot() {
     hedotools.shifterTwo.setText(sumtextarray);
     hedotools.shifterTwo._xlabel_text("Per activity phrase caloric expenditure shift");
     hedotools.shifterTwo._ylabel_text("Activity rank");
-    hedotools.shifterTwo.setfigure(d3.select("#shift02")).plot();
+    hedotools.shifterTwo.show_x_axis(true);    
+    hedotools.shifterTwo.setfigure(d3.select("#shift02"));
+    hedotools.shifterTwo.plot();
 };
 
 initializePlot();
@@ -203,4 +206,6 @@ function computeActivityRanks() {
     }
     // return activityRanks;    
 }
+
+
 

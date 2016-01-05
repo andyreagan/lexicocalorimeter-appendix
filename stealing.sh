@@ -1,24 +1,25 @@
-# for ID in {0..48}
-# do
-#     # take the first one
-#     phantomjs my-crowbar.js http://127.0.0.1:8080/maps.html?ID=${ID} shiftsvg shifts/food-${ID}.svg
-#     # take the second one
-#     phantomjs my-crowbar.js http://127.0.0.1:8080/maps.html?ID=${ID} shiftsvg2 shifts/activity-${ID}.svg    
-#     for WORDS in posup posdown negup negdown
-#     do
-# 	phantomjs my-crowbar.js http://127.0.0.1:8080/maps.html?ID=${ID}\&wordtypes=${WORDS} shiftsvg shifts/food-${ID}-${WORDS}.svg
-# 	phantomjs my-crowbar.js http://127.0.0.1:8080/maps.html?ID=${ID}\&wordtypes=${WORDS} shiftsvg2 shifts/activity-${ID}-${WORDS}.svg
-#     done
-# done
+# stealing.sh
+# use a local webserver to generate and capture all of the shifts
+#
+# note: use node http-server (python SimpleHTTPServer will fail)
 
-phantomjs my-crowbar.js http://127.0.0.1:8080/maps.html?ID=${ID} barsvg figures/barsvg.svg
-rsvg-convert --format=eps figures/barsvg.svg > figures/barsvg.eps
-epstopdf figures/barsvg.eps
+########################################
+## grab the .svg's
+for ID in {0..48}
+do
+    # take the first one
+    phantomjs my-crowbar.js http://127.0.0.1:8080/maps.html?ID=${ID} shiftsvg shifts/food-${ID}.svg
+    # take the second one
+    phantomjs my-crowbar.js http://127.0.0.1:8080/maps.html?ID=${ID} shiftsvg2 shifts/activity-${ID}.svg    
+    for WORDS in posup posdown negup negdown
+    do
+	phantomjs my-crowbar.js http://127.0.0.1:8080/maps.html?ID=${ID}\&wordtypes=${WORDS} shiftsvg shifts/food-${ID}-${WORDS}.svg
+	phantomjs my-crowbar.js http://127.0.0.1:8080/maps.html?ID=${ID}\&wordtypes=${WORDS} shiftsvg2 shifts/activity-${ID}-${WORDS}.svg
+    done
+done
 
-phantomjs my-crowbar.js http://127.0.0.1:8080/maps.html?ID=${ID} mapsvg figures/mapsvg.svg
-rsvg-convert --format=eps figures/mapsvg.svg > figures/mapsvg.eps
-epstopdf figures/mapsvg.eps
-
+########################################
+## convert all of the shift to .eps then .pdf
 cd shifts
 for ID in {0..48}
 do
@@ -35,6 +36,21 @@ do
     done
 done
 cd ..
+
+########################################
+## grab and convert the bar chart and the map
+
+# phantomjs my-crowbar.js http://127.0.0.1:8080/maps.html?ID=${ID} barsvg figures/barsvg.svg
+# rsvg-convert --format=eps figures/barsvg.svg > figures/barsvg.eps
+# epstopdf figures/barsvg.eps
+
+# phantomjs my-crowbar.js http://127.0.0.1:8080/maps.html?ID=${ID} mapsvg figures/mapsvg.svg
+# rsvg-convert --format=eps figures/mapsvg.svg > figures/mapsvg.eps
+# epstopdf figures/mapsvg.eps
+
+
+########################################
+## these all use inkScape (no good)
 
 # for ID in {0..48}
 # do    
